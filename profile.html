@@ -202,7 +202,7 @@
               <img class="profile-avatar" src="${u.avatar}" alt="${u.name} avatar">
               <div class="meta">
                 <div class="profile-name">${u.name}</div>
-                <div class="profile-bio"><i class="bi bi-geo-alt"></i> ${u.location} • <i class="bi bi-people"></i> ${u.friendsCount} friends</div>
+                <div class="profile-bio"><i class="bi bi-geo-alt"></i> ${u.location} •<i class="bi bi-people"></i> ${(u.friendsLabel || u.friendsCount)} friends</div>
                 <nav class="pillbar" aria-label="Profile sections">
                   <a class="pill ${tab==='timeline'?'active':''}" href="${pillHref(uKey,'timeline')}">Timeline</a>
                   <a class="pill ${tab==='about'?'active':''}"    href="${pillHref(uKey,'about')}">About</a>
@@ -307,7 +307,7 @@
         <div class="card shadow friends-wrap section">
           <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
             <h3 style="margin:0">Friends</h3>
-            <div class="muted">${u.friends.length} friends</div>
+            <div class="muted">${(u.friendsLabel || u.friendsCount)} friends</div>
           </div>
           <div class="friends-grid" id="friendsGrid">
             ${u.friends.map(f => `
