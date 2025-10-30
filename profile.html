@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>FaceKing — Profile</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <style>
+    :root { --bg:#f6f7f8; --panel:#fff; --text:#0a0a0a; --muted:#6b7280; --line:#e5e7eb; --soft:#f3f4f6; --brand:#2563eb; --radius:16px; }
+    *{box-sizing:border-box}
+    body{margin:0;font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,'Noto Sans','Helvetica Neue',Arial,'Apple Color Emoji','Segoe UI Emoji';background:var(--bg);color:var(--text);padding-top:56px}
+    .container{max-width:960px;margin:0 auto;padding:0 12px}
+    .card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius)}
+    .shadow{box-shadow:0 1px 2px rgba(0,0,0,.06)}
+    a{color:inherit;text-decoration:none} a:hover{text-decoration:underline}
+
+    .topnav{position:fixed;top:0;left:0;right:0;z-index:1000;background:rgba(255,255,255,.8);backdrop-filter:saturate(180%) blur(10px);border-bottom:1px solid var(--line)}
+    .topnav-inner{height:56px;display:flex;align-items:center;justify-content:space-between}
+    .brand{display:flex;align-items:center;gap:8px}
+    .brand-badge{width:36px;height:36px;background:var(--brand);border-radius:12px}
+    .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;background:var(--soft);border:1px solid var(--line);border-radius:12px;padding:8px 12px;cursor:pointer}
+    .btn.primary{background:var(--brand);border-color:var(--brand);color:#fff}
+    .btn.ghost{background:var(--soft)}
+    .btn.round{border-radius:999px}
+    .btn[disabled]{opacity:.6;cursor:not-allowed}
+
+    .profile-cover{height:240px;background:#e5e7eb;border-radius:16px;overflow:hidden}
+    .profile-cover img{width:100%;height:100%;object-fit:cover}
+    .profile-header{position:relative;margin-top:-64px;padding:0 16px 16px}
+    .profile-row{display:grid;grid-template-columns: 1fr auto;gap:16px;align-items:end;}
+    @media (max-width: 700px){ .profile-row{ grid-template-columns: 1fr; align-items:start } .actions{ justify-content:flex-start } }
+    .left{display:flex;gap:16px;align-items:flex-end;min-width:0}
+    .profile-avatar{width:128px;height:128px;border-radius:999px;border:4px solid #fff;object-fit:cover;background:#e5e7eb;flex:none}
+    .meta{display:flex;flex-direction:column;gap:6px;min-width:0}
+    .profile-name{font-size:32px;font-weight:800;color:#000}
+    .profile-bio{color:#111;font-weight:600;font-size:16px}
+    .pillbar{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+    .pill{padding:8px 12px;border-radius:999px;border:1px solid var(--line);background:var(--soft);font-size:14px;white-space:nowrap}
+    .pill.active{background:#fff;border-color:var(--brand);color:var(--brand);text-decoration:none}
+    .actions{display:flex;gap:8px;align-items:center;white-space:nowrap}
+    .btn-ghost{display:inline-flex;align-items:center;justify-content:center;background:var(--soft);border:1px solid var(--line);border-radius:12px;height:40px;padding:0 12px}
+    .btn-ghost i{font-size:18px}
+
+    .menu{position:relative}
+    .menu-list{position:absolute; right:0; top:calc(100% + 6px); background:#fff; border:1px solid var(--line); border-radius:12px; box-shadow:0 10px 30px rgba(0,0,0,.08); padding:6px; min-width:180px; z-index:10; display:none;}
+    .menu-list .item{display:flex;gap:8px;align-items:center;padding:8px 10px;border-radius:8px;cursor:pointer}
+    .menu-list .item:hover{background:var(--soft)}
+    .menu.open .menu-list{display:block}
+
+    .section{margin-top:16px}
+    .grid{display:grid;gap:16px}
+    .grid.posts{grid-template-columns:1fr}
+
+    .post{overflow:hidden}
+    .post-head{display:flex;gap:12px;padding:16px}
+    .post-meta{display:flex;flex-direction:column;gap:4px}
+    .post-meta .name{font-weight:600}
+    .post-meta .time{font-size:12px;color:var(--muted);display:flex;align-items:center;gap:6px}
+    .post-media{aspect-ratio:16/9;background:#e5e7eb;border-bottom:1px solid var(--line)}
+    .post-caption{padding:0 16px 12px;line-height:1.5}
+    .post-stats{display:flex;justify-content:space-between;padding:8px 16px;color:var(--muted);font-size:14px}
+    .post-actions{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:8px 16px}
+    .post-actions .btn{padding:10px}
+
+    .about.card{padding:16px}
+    .about li{margin:6px 0}
+
+    .friends-wrap{padding:16px}
+    .friends-grid{display:grid;gap:16px;grid-template-columns:repeat(2,minmax(0,1fr))}
+    @media (min-width: 800px){ .friends-grid{grid-template-columns:repeat(3,minmax(0,1fr))} }
+    .friend-card{display:flex;flex-direction:column;overflow:hidden}
+    .friend-card .thumb{aspect-ratio:16/9;background:#e5e7eb}
+    .friend-card .thumb img{width:100%;height:100%;object-fit:cover}
+    .friend-card .row{display:flex;gap:10px;align-items:center;padding:12px}
+    .friend-card .row img{width:44px;height:44px;border-radius:999px;object-fit:cover}
+    .friend-card .name{font-weight:600}
+    .friend-card .mutuals{font-size:12px;color:var(--muted)}
+    .friend-card .actions{display:flex;gap:8px;padding:0 12px 12px;align-items:center;flex-wrap:wrap}
+    .friend-card .btn{flex:1}
+
+    .chat-dock{ position:fixed; right:12px; bottom:0; z-index:1200; display:flex; gap:10px; align-items:flex-end; flex-wrap:wrap-reverse; max-width:calc(100vw - 24px); pointer-events:none }
+    .chat-win{ width:320px; max-width:95vw; background:#fff; border:1px solid var(--line); border-top-left-radius:12px; border-top-right-radius:12px; box-shadow:0 8px 24px rgba(0,0,0,.12); pointer-events:auto }
+    .chat-head{ height:44px; display:flex; align-items:center; justify-content:space-between; gap:8px; padding:0 10px; border-bottom:1px solid var(--line); background:#fff; border-top-left-radius:12px; border-top-right-radius:12px }
+    .chat-head .title{ display:flex; align-items:center; gap:8px; min-width:0 }
+    .chat-head .title img{ width:28px; height:28px; border-radius:999px; object-fit:cover }
+    .chat-head .name{ font-weight:600; overflow:hidden; text-overflow:ellipsis; white-space:nowrap }
+    .chat-body{ height:260px; overflow:auto; padding:10px; background:var(--bg); display:grid; gap:8px }
+    .msg{ max-width:75%; padding:8px 10px; border-radius:14px; border:1px solid var(--line); background:#fff }
+    .msg.me{ margin-left:auto; background:#e0ecff; border-color:#cfe0ff }
+    .meta{ font-size:11px; color:var(--muted); margin-top:4px }
+    .chat-compose{ display:flex; gap:8px; padding:8px; border-top:1px solid var(--line); background:#fff }
+    .chat-compose input{ flex:1; height:36px; border-radius:999px; border:1px solid var(--line); background:var(--soft); padding:0 44px 0 12px; outline:none }
+    .chat-compose button{ width:38px; height:38px; border-radius:999px; border:0; background:var(--brand); color:#fff; cursor:pointer }
+    .chat-head .btn-ghost{ border:1px solid var(--line); background:var(--soft); width:32px; height:32px }
+    @media (max-width:900px){ .chat-dock{ display:none } }
+  </style>
+</head>
+<body>
+  <header class="topnav">
+    <div class="container topnav-inner">
+      <a href="index.html" class="brand">
+        <div class="brand-badge" aria-hidden></div>
+        <strong>FaceKing</strong>
+      </a>
+      <a href="index.html" class="btn"><i class="bi bi-house-door"></i> Home</a>
+    </div>
+  </header>
+
+  <main class="container" id="mount"></main>
+
+  <!-- Chat Dock -->
+  <div id="chatDock" class="chat-dock" aria-live="polite"></div>
+
+  <!-- Shared chat dock -->
+  <script src="chat.js"></script>
+
+  <script>
+    /* ===== BASIC PROFILE RENDERING (same data as before) ===== */
+    const currentUser = 'roi'; // simulate logged-in user
+    const relationships = { 'roi': { 'alex-reyes': 'friend','jamie-cruz': 'friend','sam-lee': 'friend','pat-diaz': 'friend','mika': 'friend','luis': 'friend','ava': 'friend' } };
+    const relationBetween = (viewer, target) => { if (viewer === target) return 'self'; const table = relationships[viewer] || {}; return table[target] || 'none'; };
+
+    const users = {
+      'roi': { name:'Roi', avatar:'https://ui-avatars.com/api/?name=Roi&background=2563eb&color=fff', cover:'https://picsum.photos/seed/roi-cover/1200/400', bio:'Building FaceKing. Coffee-fueled and curious.', location:'Davao City, PH', friendsCount:312, about:{ work:'Freelancer', education:'University', livesIn:'Davao', joined:'2025' }, posts:[{caption:'What a view!', media:'https://picsum.photos/seed/roi1/800/450', time:'Just now', likes:24, comments:3, shares:1 }], friends:[
+        {slug:'alex-reyes', name:'Alex Reyes', avatar:'https://ui-avatars.com/api/?name=Alex+Reyes&background=38bdf8&color=fff', mutuals:12, cover:'https://picsum.photos/seed/f1/800/450'},
+        {slug:'jamie-cruz', name:'Jamie Cruz', avatar:'https://ui-avatars.com/api/?name=Jamie+Cruz&background=f97316&color=fff', mutuals:8, cover:'https://picsum.photos/seed/f2/800/450'},
+        {slug:'sam-lee', name:'Sam Lee', avatar:'https://ui-avatars.com/api/?name=Sam+Lee&background=22c55e&color=fff', mutuals:6, cover:'https://picsum.photos/seed/f3/800/450'},
+        {slug:'mika', name:'Mika', avatar:'https://ui-avatars.com/api/?name=Mika&background=22c55e&color=fff', mutuals:4, cover:'https://picsum.photos/seed/f4/800/450'},
+        {slug:'luis', name:'Luis', avatar:'https://ui-avatars.com/api/?name=Luis&background=0ea5e9&color=fff', mutuals:3, cover:'https://picsum.photos/seed/f5/800/450'},
+        {slug:'ava', name:'Ava', avatar:'https://ui-avatars.com/api/?name=Ava&background=f59e0b&color=fff', mutuals:2, cover:'https://picsum.photos/seed/f6/800/450'}
+      ] },
+      'alex-reyes': { name:'Alex Reyes', avatar:'https://ui-avatars.com/api/?name=Alex+Reyes&background=38bdf8&color=fff', cover:'https://picsum.photos/seed/alex-cover/1200/400', bio:'Weekend cyclist, weekday dev.', location:'Quezon City', friendsCount:680, about:{ work:'Frontend Engineer', education:'UP Diliman', livesIn:'QC', joined:'2023' }, posts:[{caption:'At the beach 🌅', media:'https://picsum.photos/seed/post1/800/450', time:'2h', likes:1200, comments:324, shares:87 }], friends:[
+        {slug:'jamie-cruz', name:'Jamie Cruz', avatar:'https://ui-avatars.com/api/?name=Jamie+Cruz&background=f97316&color=fff', mutuals:22, cover:'https://picsum.photos/seed/f7/800/450'},
+        {slug:'sam-lee', name:'Sam Lee', avatar:'https://ui-avatars.com/api/?name=Sam+Lee&background=22c55e&color=fff', mutuals:18, cover:'https://picsum.photos/seed/f8/800/450'},
+        {slug:'roi', name:'Roi', avatar:'https://ui-avatars.com/api/?name=Roi&background=2563eb&color=fff', mutuals:12, cover:'https://picsum.photos/seed/f9/800/450'}
+      ] },
+      'jamie-cruz': { name:'Jamie Cruz', avatar:'https://ui-avatars.com/api/?name=Jamie+Cruz&background=f97316&color=fff', cover:'https://picsum.photos/seed/jamie-cover/1200/400', bio:'Team snacks officer. Nature > indoors.', location:'Taguig', friendsCount:540, about:{ work:'Photographer', education:'Benilde', livesIn:'Taguig', joined:'2024' }, posts:[{caption:'How awesome nature can be', media:'https://picsum.photos/seed/post2/800/450', time:'5h', likes:842, comments:129, shares:22 }], friends:[
+        {slug:'alex-reyes', name:'Alex Reyes', avatar:'https://ui-avatars.com/api/?name=Alex+Reyes&background=38bdf8&color=fff', mutuals:22, cover:'https://picsum.photos/seed/f10/800/450'},
+        {slug:'sam-lee', name:'Sam Lee', avatar:'https://ui-avatars.com/api/?name=Sam+Lee&background=22c55e&color=fff', mutuals:14, cover:'https://picsum.photos/seed/f11/800/450'},
+        {slug:'mika', name:'Mika', avatar:'https://ui-avatars.com/api/?name=Mika&background=22c55e&color=fff', mutuals:8, cover:'https://picsum.photos/seed/f12/800/450'}
+      ] },
+      'sam-lee': { name:'Sam Lee', avatar:'https://ui-avatars.com/api/?name=Sam+Lee&background=22c55e&color=fff', cover:'https://picsum.photos/seed/sam-cover/1200/400', bio:'Design + data viz. Dark mode 4ever.', location:'Makati', friendsCount:421, about:{ work:'Product Designer', education:'Ateneo', livesIn:'Makati', joined:'2022' }, posts:[{caption:'Silent Hill Vibes! 🔥', media:'https://picsum.photos/seed/post3/800/450', time:'1d', likes:2400, comments:458, shares:190 }], friends:[
+        {slug:'roi', name:'Roi', avatar:'https://ui-avatars.com/api/?name=Roi&background=2563eb&color=fff', mutuals:6, cover:'https://picsum.photos/seed/f13/800/450'},
+        {slug:'jamie-cruz', name:'Jamie Cruz', avatar:'https://ui-avatars.com/api/?name=Jamie+Cruz&background=f97316&color=fff', mutuals:14, cover:'https://picsum.photos/seed/f14/800/450'},
+        {slug:'mika', name:'Mika', avatar:'https://ui-avatars.com/api/?name=Mika&background=22c55e&color=fff', mutuals:9, cover:'https://picsum.photos/seed/f15/800/450'}
+      ] },
+      'pat-diaz': { name:'Pat Diaz', avatar:'https://ui-avatars.com/api/?name=Pat+Diaz&background=f43f5e&color=fff', cover:'https://picsum.photos/seed/pat-cover/1200/400', bio:'Birthday human today 🎂', location:'Pasig', friendsCount:299, about:{ work:'Project Manager', education:'UST', livesIn:'Pasig', joined:'2021' }, posts:[], friends:[
+        {slug:'roi', name:'Roi', avatar:'https://ui-avatars.com/api/?name=Roi&background=2563eb&color=fff', mutuals:3, cover:'https://picsum.photos/seed/f16/800/450'},
+        {slug:'alex-reyes', name:'Alex Reyes', avatar:'https://ui-avatars.com/api/?name=Alex+Reyes&background=38bdf8&color=fff', mutuals:5, cover:'https://picsum.photos/seed/f17/800/450'}
+      ] },
+      'mika': { name:'Mika', avatar:'https://ui-avatars.com/api/?name=Mika&background=22c55e&color=fff', cover:'https://picsum.photos/seed/mika-cover/1200/400', bio:'Coffee + cats.', location:'BGC', friendsCount:184, about:{ work:'Barista', education:'PUP', livesIn:'BGC', joined:'2024' }, posts:[], friends:[] },
+      'luis': { name:'Luis', avatar:'https://ui-avatars.com/api/?name=Luis&background=0ea5e9&color=fff', cover:'https://picsum.photos/seed/luis-cover/1200/400', bio:'Photowalk weekend warrior.', location:'QC', friendsCount:350, about:{ work:'QA Analyst', education:'FEU', livesIn:'QC', joined:'2020' }, posts:[], friends:[] },
+      'ava': { name:'Ava', avatar:'https://ui-avatars.com/api/?name=Ava&background=f59e0b&color=fff', cover:'https://picsum.photos/seed/ava-cover/1200/400', bio:'UI/UX + latte art.', location:'Mandaluyong', friendsCount:275, about:{ work:'UX Designer', education:'UP Manila', livesIn:'Mandaluyong', joined:'2023' }, posts:[], friends:[] }
+    };
+
+    const params = new URLSearchParams(location.search);
+    const slug = params.get('u') || currentUser;
+    const tab  = params.get('tab') || 'timeline';
+    const mount = document.getElementById('mount');
+    const pillHref = (u, t) => `profile.html?u=${encodeURIComponent(u)}&tab=${encodeURIComponent(t)}`;
+
+    const header = (uKey) => {
+      const u = users[uKey];
+      const rel = relationBetween(currentUser, uKey);
+      let actionsHtml = '';
+      if (rel === 'self') {
+        actionsHtml = `
+          <button class="btn" id="editProfileBtn"><i class="bi bi-pencil-square"></i> Edit profile</button>
+          <button class="btn primary" id="addStoryBtn"><i class="bi bi-plus-circle"></i> Add to story</button>
+          <button class="btn-ghost" id="moreBtn" title="More"><i class="bi bi-three-dots"></i></button>
+        `;
+      } else if (rel === 'friend') {
+        actionsHtml = `
+          <div class="menu" id="friendsMenu">
+            <button class="btn" id="friendsBtn"><i class="bi bi-person-check"></i> Friends</button>
+            <div class="menu-list" role="menu" aria-label="Friend options">
+              <div class="item" id="unfriend"><i class="bi bi-person-x"></i> Unfriend</div>
+            </div>
+          </div>
+          <a class="btn" href="#" data-action="message" data-slug="${uKey}"><i class="bi bi-chat-dots"></i> Message</a>
+          <button class="btn-ghost" id="moreBtn" title="More"><i class="bi bi-three-dots"></i></button>
+        `;
+      } else if (rel === 'requested') {
+        actionsHtml = `
+          <button class="btn" id="requestBtn" disabled><i class="bi bi-hourglass-split"></i> Request sent</button>
+          <a class="btn" href="#" data-action="message" data-slug="${uKey}"><i class="bi bi-chat-dots"></i> Message</a>
+          <button class="btn-ghost" id="moreBtn" title="More"><i class="bi bi-three-dots"></i></button>
+        `;
+      } else {
+        actionsHtml = `
+          <button class="btn primary" id="addFriendBtn"><i class="bi bi-person-plus"></i> Add friend</button>
+          <a class="btn" href="#" data-action="message" data-slug="${uKey}"><i class="bi bi-chat-dots"></i> Message</a>
+          <button class="btn-ghost" id="moreBtn" title="More"><i class="bi bi-three-dots"></i></button>
+        `;
+      }
+
+      return `
+        <div class="card shadow profile-cover"><img src="${u.cover}" alt="${u.name} cover"></div>
+        <div class="profile-header">
+          <div class="profile-row">
+            <div class="left">
+              <img class="profile-avatar" src="${u.avatar}" alt="${u.name} avatar">
+              <div class="meta">
+                <div class="profile-name">${u.name}</div>
+                <div class="profile-bio"><i class="bi bi-geo-alt"></i> ${u.location} • <i class="bi bi-people"></i> ${u.friendsCount} friends</div>
+                <nav class="pillbar" aria-label="Profile sections">
+                  <a class="pill ${tab==='timeline'?'active':''}" href="${pillHref(uKey,'timeline')}">Timeline</a>
+                  <a class="pill ${tab==='about'?'active':''}"    href="${pillHref(uKey,'about')}">About</a>
+                  <a class="pill ${tab==='friends'?'active':''}"  href="${pillHref(uKey,'friends')}">Friends</a>
+                </nav>
+              </div>
+            </div>
+            <div class="actions">${actionsHtml}</div>
+          </div>
+        </div>
+      `;
+    };
+
+    const posts = (uKey) => {
+      const u = users[uKey];
+      if (!u.posts.length) return `<div class="card shadow" style="padding:16px"><div class="muted">No posts yet.</div></div>`;
+      return `
+        <div class="grid posts">
+          ${u.posts.map(p => `
+            <article class="card shadow post">
+              <div class="post-head">
+                <img class="avatar" src="${u.avatar}" alt="${u.name}" style="width:40px;height:40px;border-radius:999px;object-fit:cover">
+                <div class="post-meta" style="flex:1">
+                  <div class="name">${u.name}</div>
+                  <div class="time"><i class="bi bi-globe2"></i> ${p.time}</div>
+                </div>
+                <button class="btn" aria-label="More"><i class="bi bi-three-dots"></i></button>
+              </div>
+              <div class="post-caption">${p.caption}</div>
+              <div class="post-media"><img src="${p.media}" alt="" style="width:100%;height:100%;object-fit:cover"></div>
+              <div class="post-stats"><div><i class="bi bi-hand-thumbs-up"></i> ${p.likes}</div><div>${p.comments} comments · ${p.shares} shares</div></div>
+              <div class="post-actions">
+                <button class="btn"><i class="bi bi-hand-thumbs-up"></i> Like</button>
+                <button class="btn"><i class="bi bi-chat"></i> Comment</button>
+                <button class="btn"><i class="bi bi-share"></i> Share</button>
+              </div>
+            </article>
+          `).join('')}
+        </div>
+      `;
+    };
+
+    const about = (uKey) => {
+      const a = users[uKey].about;
+      return `
+        <div class="about card shadow section">
+          <h3 style="margin:0 0 8px">About</h3>
+          <ul style="padding-left:18px; margin:0">
+            <li><i class="bi bi-briefcase"></i> Works as <strong>${a.work}</strong></li>
+            <li><i class="bi bi-mortarboard"></i> Studied at <strong>${a.education}</strong></li>
+            <li><i class="bi bi-geo-alt"></i> Lives in <strong>${a.livesIn}</strong></li>
+            <li><i class="bi bi-calendar-event"></i> Joined <strong>${a.joined}</strong></li>
+          </ul>
+        </div>
+      `;
+    };
+
+    const friends = (uKey) => {
+      const u = users[uKey];
+      if (!u.friends.length) return `<div class="card shadow" style="padding:16px"><div class="muted">No friends to show.</div></div>`;
+
+      const actionFor = (slug) => {
+        const rel = relationBetween(currentUser, slug);
+        if (rel === 'friend') {
+          return `
+            <div class="menu" data-menu-for="${slug}">
+              <button class="btn" data-action="friends-menu-btn" data-slug="${slug}">
+                <i class="bi bi-person-check"></i> Friends
+              </button>
+              <div class="menu-list" role="menu" aria-label="Friend options">
+                <div class="item" data-action="unfriend" data-slug="${slug}">
+                  <i class="bi bi-person-x"></i> Unfriend
+                </div>
+              </div>
+            </div>
+            <a class="btn" href="#" data-action="message" data-slug="${slug}">
+              <i class="bi bi-chat-dots"></i> Message
+            </a>
+          `;
+        }
+        if (rel === 'requested') {
+          return `
+            <button class="btn" disabled>
+              <i class="bi bi-hourglass-split"></i> Request sent
+            </button>
+            <a class="btn" href="#" data-action="message" data-slug="${slug}">
+              <i class="bi bi-chat-dots"></i> Message
+            </a>
+          `;
+        }
+        return `
+          <button class="btn primary" data-action="add-friend" data-slug="${slug}">
+            <i class="bi bi-person-plus"></i> Add friend
+          </button>
+          <a class="btn" href="#" data-action="message" data-slug="${slug}">
+            <i class="bi bi-chat-dots"></i> Message
+          </a>
+        `;
+      };
+
+      return `
+        <div class="card shadow friends-wrap section">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+            <h3 style="margin:0">Friends</h3>
+            <div class="muted">${u.friends.length} friends</div>
+          </div>
+          <div class="friends-grid" id="friendsGrid">
+            ${u.friends.map(f => `
+              <div class="friend-card card" data-fslug="${f.slug}">
+                <div class="thumb"><img src="${f.cover}" alt=""></div>
+                <div class="row">
+                  <img src="${f.avatar}" alt="${f.name} avatar">
+                  <div>
+                    <a class="name" href="profile.html?u=${encodeURIComponent(f.slug)}">${f.name}</a>
+                    <div class="mutuals">${f.mutuals} mutual friends</div>
+                  </div>
+                </div>
+                <div class="actions">
+                  ${actionFor(f.slug)}
+                </div>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      `;
+    };
+
+    function renderProfile(uKey){
+      const u = users[uKey];
+      if(!u){
+        mount.innerHTML = `
+          <div class="card shadow" style="padding:16px; text-align:center">
+            <div style="font-size:28px; font-weight:700; margin-bottom:8px">Profile not found</div>
+            <div class="muted">The profile you’re looking for doesn’t exist.</div>
+            <div style="margin-top:12px"><a class="btn" href="index.html"><i class="bi bi-house-door"></i> Go back home</a></div>
+          </div>`;
+        return;
+      }
+
+      let body = '';
+      if (tab === 'about') body = about(uKey);
+      else if (tab === 'friends') body = friends(uKey);
+      else body = posts(uKey);
+
+      mount.innerHTML = `${header(uKey)} <section class="section" id="view">${body}</section>`;
+
+      function rerender(){ renderProfile(uKey); }
+
+      const rel = relationBetween(currentUser, uKey);
+      if (rel === 'self') {
+        document.getElementById('editProfileBtn')?.addEventListener('click', ()=> alert('Unavailable for now'));
+        document.getElementById('addStoryBtn')?.addEventListener('click', ()=> alert('Unavailable for now'));
+      } else if (rel === 'friend') {
+        const menu = document.getElementById('friendsMenu');
+        const btn  = document.getElementById('friendsBtn');
+        const unf  = document.getElementById('unfriend');
+        btn?.addEventListener('click', ()=> menu.classList.toggle('open'));
+        document.addEventListener('click', (e)=>{ if (!menu.contains(e.target)) menu.classList.remove('open'); });
+        unf?.addEventListener('click', ()=>{
+          if (!relationships[currentUser]) relationships[currentUser] = {};
+          relationships[currentUser][uKey] = 'none';
+          rerender();
+        });
+      } else if (rel === 'none') {
+        const addBtn = document.getElementById('addFriendBtn');
+        addBtn?.addEventListener('click', ()=>{
+          if (!relationships[currentUser]) relationships[currentUser] = {};
+          relationships[currentUser][uKey] = 'requested';
+          rerender();
+        });
+      }
+
+      const view = document.getElementById('view');
+      view?.addEventListener('click', (e) => {
+        const actEl = e.target.closest('[data-action]');
+        if (!actEl) return;
+        const action = actEl.getAttribute('data-action');
+        const targetSlug = actEl.getAttribute('data-slug');
+        if (!targetSlug) return;
+
+        if (!relationships[currentUser]) relationships[currentUser] = {};
+
+        if (action === 'add-friend') {
+          relationships[currentUser][targetSlug] = 'requested';
+          rerender();
+        } else if (action === 'unfriend') {
+          const ok = confirm('Unfriend this person?');
+          if (!ok) return;
+          relationships[currentUser][targetSlug] = 'none';
+          rerender();
+        } else if (action === 'friends-menu-btn') {
+          const cardMenu = actEl.closest('.menu');
+          cardMenu?.classList.toggle('open');
+          document.addEventListener('click', (ev)=>{ if (!cardMenu.contains(ev.target)) cardMenu.classList.remove('open'); }, { once: true });
+        } else if (action === 'message') {
+          e.preventDefault();
+          window.openChat(targetSlug);
+        }
+      });
+
+      document.querySelector('.actions [data-action="message"]')?.addEventListener('click', (e)=>{
+        e.preventDefault();
+        const targetSlug = e.currentTarget.getAttribute('data-slug');
+        window.openChat(targetSlug);
+      });
+
+      window.scrollTo({ top: 0, behavior: 'instant' });
+    }
+
+    /* ===== Build contacts from users, init chat, then render ===== */
+    const contacts = {};
+    Object.keys(users).forEach(k => { if (k !== currentUser) { contacts[k] = { name: users[k].name, avatar: users[k].avatar, presence: 'Active now' }; }});
+    const me = { slug: currentUser, name: users[currentUser].name, avatar: users[currentUser].avatar };
+    const replies = { default: ['😎','Okay','Hmmm?','I love you <3','Sige!','😂','🙌','👍','🔥','Alright','💯','🎉','🥳','🤝','Appreciate it!'] };
+
+    const chatAPI = ChatDock.init({ me, contacts, replies, dockSelector:'#chatDock' });
+    window.openChat = chatAPI.open;
+
+    renderProfile(slug);
+  </script>
+</body>
+</html>

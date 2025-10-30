@@ -1,0 +1,867 @@
+<!DOCTYPE html>
+<html lang="en">
+<head> 
+  <meta charset="utf-8" /> 
+  <meta name="viewport" content="width=device-width, initial-scale=1" /> 
+  <title>FaceKing - Made by Roi</title>
+
+  <!-- Bootstrap 5 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Bootstrap Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+  <style>
+    :root { --bg:#f6f7f8; --panel:#fff; --text:#0a0a0a; --muted:#6b7280; --line:#e5e7eb; --soft:#f3f4f6; --brand:#2563eb; --radius:16px; }
+    *{ box-sizing:border-box }
+    html,body{ height:100% }
+    body{ margin:0; font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,'Noto Sans','Helvetica Neue',Arial,'Apple Color Emoji','Segoe UI Emoji'; background:var(--bg); color:var(--text); padding-top:56px }
+    a{ color:inherit; text-decoration:none } a:hover{ text-decoration:underline }
+
+    .container{ max-width:1400px; margin:0 auto; padding:0 12px }
+    .row{ display:grid; gap:16px }
+    .card{ background:var(--panel); border:1px solid var(--line); border-radius:var(--radius) }
+    .shadow{ box-shadow:0 1px 2px rgba(0,0,0,.06) }
+    .hidden{ display:none }
+    .btn-ghost{ display:inline-flex; align-items:center; justify-content:center; gap:8px; background:var(--soft); border:none; border-radius:999px; height:40px; width:40px; cursor:pointer; color:var(--text) }
+    .btn-ghost:hover{ transform:translateY(-1px); box-shadow:0 2px 6px rgba(0,0,0,.06) }
+    .avatar{ width:40px; height:40px; border-radius:999px; background:#e5e7eb; object-fit:cover }
+    .muted{ color:var(--muted) }
+    .btn{ display:inline-flex; align-items:center; gap:8px; background:var(--soft); border:1px solid var(--line); border-radius:12px; padding:8px 12px; cursor:pointer }
+
+    .topnav{ position:fixed; top:0; left:0; right:0; z-index:1000; background:rgba(255,255,255,.8); backdrop-filter:saturate(180%) blur(10px); border-bottom:1px solid var(--line) }
+    .topnav-inner{ height:56px; display:flex; align-items:center; justify-content:space-between }
+    .brand{ display:flex; align-items:center; gap:8px }
+    .brand-badge{ width:36px; height:36px; background:var(--brand); border-radius:12px }
+
+    .search{ position:relative; display:none; align-items:center; gap:8px; background:var(--soft); border:1px solid var(--line); border-radius:999px; padding:8px 12px; min-width:260px }
+    .search input{ border:0; outline:0; background:transparent; width:100% }
+
+    .search-results{
+      position:absolute; top:48px; left:0; right:0; z-index:1100;
+      background:#fff; border:1px solid var(--line); border-radius:12px;
+      box-shadow:0 12px 24px rgba(0,0,0,.08);
+      overflow:hidden; display:none; max-height:70vh; overflow-y:auto;
+    }
+    .search-results.show{ display:block }
+    .result-item{ display:flex; align-items:center; gap:10px; padding:10px 12px; text-decoration:none; color:inherit }
+    .result-item:hover, .result-item.active{ background:var(--soft) }
+    .result-item img{ width:36px; height:36px; border-radius:999px; object-fit:cover }
+    .result-meta{ display:flex; flex-direction:column; line-height:1.2 }
+    .result-meta small{ color:var(--muted) }
+    .result-action{ margin-left:auto; display:inline-flex; align-items:center; justify-content:center; width:32px; height:32px; border-radius:999px; background:var(--soft); border:1px solid var(--line) }
+    .result-section{ padding:8px 12px; font-weight:600; font-size:12px; color:#374151; background:#fafafa; border-bottom:1px solid var(--line) }
+
+    .navicons{ display:none; gap:8px }
+    .actions{ display:flex; gap:8px; align-items:center }
+
+    .layout{ grid-template-columns:1fr }
+    .leftbar{ display:none; position:sticky; top:56px; height:calc(100dvh - 56px); overflow:auto; padding:12px }
+    .rightbar{ display:none; position:sticky; top:56px; height:calc(100dvh - 56px); overflow:auto; padding:12px }
+    .feed{ max-width:680px; width:100%; margin:0 auto; padding:16px 0 }
+
+    .item{ display:flex; align-items:center; gap:12px; padding:8px; border-radius:12px; cursor:pointer }
+    .item:hover{ background:var(--soft) }
+    .item i.bi{ font-size:18px; color:var(--muted); width:24px; display:inline-flex; justify-content:center }
+    .item:hover i.bi{ color:var(--text) }
+
+    .stories{ display:flex; gap:12px; overflow-x:auto; padding-bottom:4px }
+    .story{ width:112px; flex:0 0 auto }
+    .story-rect{ aspect-ratio:9/16; width:100%; border-radius:16px; object-fit:cover }
+    .story-name{ font-size:12px; margin-top:6px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis }
+
+    .composer{ padding:12px }
+    .composer-input{ flex:1; height:40px; border-radius:999px; background:var(--soft); border:1px solid var(--line); display:flex; align-items:center; padding:0 14px; color:var(--muted) }
+    .composer-actions{ display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-top:10px }
+    .chip{ display:flex; gap:8px; align-items:center; justify-content:center; padding:8px; border-radius:12px; background:var(--soft); border:1px solid var(--line) }
+
+    .post{ overflow:hidden }
+    .post-head{ display:flex; gap:12px; padding:16px }
+    .post-meta{ display:flex; flex-direction:column; gap:4px }
+    .post-meta .name{ font-weight:600 }
+    .post-meta .time{ font-size:12px; color:var(--muted); display:flex; align-items:center; gap:6px }
+    .post-media{ aspect-ratio:16/9; background:#e5e7eb; border-bottom:1px solid var(--line) }
+    .post-caption{ padding:0 16px 12px; line-height:1.5 }
+    .post-stats{ display:flex; justify-content:space-between; padding:8px 16px; color:var(--muted); font-size:14px }
+    .post-actions{ display:grid; grid-template-columns:repeat(3,1fr); gap:8px; padding:8px 16px }
+    .post-actions .btn{ display:flex; align-items:center; justify-content:center; gap:8px; background:var(--soft); border:1px solid var(--line); border-radius:12px; padding:10px; font-size:14px; cursor:pointer }
+
+    .comments{ padding:8px 16px; display:grid; gap:8px }
+    .comment{ display:flex; gap:10px }
+    .comment .bubble{ background:var(--soft); border:1px solid var(--line); padding:8px 12px; border-radius:14px }
+    .comment .who{ font-weight:600; margin-right:6px }
+    .commentbar{ display:flex; align-items:center; gap:10px; padding:12px 16px; border-top:1px solid var(--line) }
+    .commentbar .input{ flex:1; height:38px; border-radius:999px; background:var(--soft); border:1px solid var(--line); padding:0 44px 0 14px; outline:none }
+    .commentbar .send{ position:relative; margin-left:-44px; width:38px; height:38px; border-radius:999px; border:0; cursor:pointer; background:transparent; color:var(--muted) }
+    .commentbar .send:hover{ color:var(--text) }
+
+    .bday-wrap{ padding:8px 12px }
+    .bday-box{ display:none; margin-top:8px }
+    .bday-box textarea{ width:100%; min-height:72px; resize:vertical; border-radius:12px; border:1px solid var(--line); background:var(--soft); padding:10px 12px; outline:none }
+    .bday-actions{ display:flex; justify-content:flex-end; gap:8px; margin-top:8px }
+
+    .chat-dock{ position:fixed; right:12px; bottom:0; z-index:1200; display:flex; gap:10px; align-items:flex-end; flex-wrap:wrap-reverse; max-width:calc(100vw - 24px); pointer-events:none }
+    .chat-win{ width:320px; max-width:95vw; background:#fff; border:1px solid var(--line); border-top-left-radius:12px; border-top-right-radius:12px; box-shadow:0 8px 24px rgba(0,0,0,.12); pointer-events:auto }
+    .chat-head{ height:44px; display:flex; align-items:center; justify-content:space-between; gap:8px; padding:0 10px; border-bottom:1px solid var(--line); background:#fff; border-top-left-radius:12px; border-top-right-radius:12px }
+    .chat-head .title{ display:flex; align-items:center; gap:8px; min-width:0 }
+    .chat-head .title img{ width:28px; height:28px; border-radius:999px; object-fit:cover }
+    .chat-head .name{ font-weight:600; overflow:hidden; text-overflow:ellipsis; white-space:nowrap }
+    .chat-body{ height:260px; overflow:auto; padding:10px; background:var(--bg); display:grid; gap:8px }
+    .msg{ max-width:75%; padding:8px 10px; border-radius:14px; border:1px solid var(--line); background:#fff }
+    .msg.me{ margin-left:auto; background:#e0ecff; border-color:#cfe0ff }
+    .meta{ font-size:11px; color:var(--muted); margin-top:4px }
+    .chat-compose{ display:flex; gap:8px; padding:8px; border-top:1px solid var(--line); background:#fff }
+    .chat-compose input{ flex:1; height:36px; border-radius:999px; border:1px solid var(--line); background:var(--soft); padding:0 44px 0 12px; outline:none }
+    .chat-compose button{ width:38px; height:38px; border-radius:999px; border:0; background:var(--brand); color:#fff; cursor:pointer }
+    .chat-head .btn-ghost{ border:1px solid var(--line); background:var(--soft); width:32px; height:32px }
+
+    .dropdown-menu{ border-radius:12px; border:1px solid var(--line) }
+
+    @media (min-width:640px){ .search{ display:flex } .navicons{ display:flex } }
+    @media (min-width:1024px){ .layout{ grid-template-columns:18rem minmax(0,1fr) } .leftbar{ display:block } }
+    @media (min-width:1280px){ .layout{ grid-template-columns:18rem minmax(0,1fr) 20rem } .rightbar{ display:block } }
+    @media (max-width:900px){ .chat-dock{ display:none } }
+
+    /* ===== WATCH (home grid) ===== */
+    .watch-overlay{ position:fixed; inset:0; z-index:1300; display:none; background:rgba(15,23,42,.15); backdrop-filter:blur(8px); align-items:flex-start; justify-content:center; padding:24px 12px; }
+    .watch-overlay.show{ display:flex }
+    .watch-sheet{ width:100%; max-width:1100px; border-radius:16px; overflow:hidden; }
+    .watch-head{ display:flex; align-items:center; justify-content:space-between; padding:10px 12px; border-bottom:1px solid var(--line); background:#fff }
+    .watch-title{ display:flex; align-items:center; gap:8px; font-weight:700 }
+    .watch-grid{ display:grid; gap:12px; padding:12px; grid-template-columns:repeat(auto-fill, minmax(260px, 1fr)); }
+    .watch-card{ display:flex; flex-direction:column; overflow:hidden; border-radius:14px; border:1px solid var(--line); background:#fff; cursor:pointer; }
+    .watch-thumb{ position:relative; aspect-ratio:16/9; background:#e5e7eb; }
+    .watch-thumb img{ width:100%; height:100%; object-fit:cover; display:block }
+    .watch-dur{ position:absolute; right:8px; bottom:8px; font-size:12px; padding:2px 6px; background:rgba(0,0,0,.7); color:#fff; border-radius:8px; }
+    .watch-body{ padding:10px; display:flex; gap:10px }
+    .watch-body img{ width:36px; height:36px; border-radius:999px; object-fit:cover }
+    .watch-text{ display:flex; flex-direction:column; gap:4px }
+    .watch-name{ font-weight:600; display:flex; align-items:center; gap:6px }
+    .watch-name .verified{ color:#0ea5e9; font-size:16px }
+    .watch-sub{ color:var(--muted); font-size:12px }
+    .watch-title-line{ line-height:1.3 }
+
+    /* ===== WATCH (player) ===== */
+    .watch-player{ position:fixed; inset:0; z-index:1400; display:none; background:rgba(2,6,23,.55); backdrop-filter:blur(10px); align-items:center; justify-content:center; padding:24px 12px; }
+    .watch-player.show{ display:flex }
+    .player-card{ width:min(1100px, 96vw); border-radius:16px; overflow:hidden; position:relative }
+    .player-close{ position:absolute; top:8px; right:8px; z-index:2; border:1px solid var(--line); background:var(--soft); }
+    .player-video{ background:#000 }
+    .player-video video{ width:100%; height:100% }
+    .player-meta{ padding:12px; display:flex; flex-direction:column; gap:10px; background:#fff; border-top:1px solid var(--line) }
+    .player-acc{ display:flex; align-items:center; gap:10px }
+    .player-acc .avatar{ width:36px; height:36px }
+    .player-acc-text{ display:flex; flex-direction:column; gap:2px }
+    .player-name{ font-weight:700; display:flex; align-items:center; gap:6px }
+    .player-name .verified{ color:#0ea5e9; font-size:18px }
+    .player-sub{ font-size:12px }
+    .player-title{ font-size:18px; font-weight:600; line-height:1.3 }
+  </style>
+</head>
+<body>
+  <!-- Top Navigation -->
+  <header class="topnav">
+    <div class="container topnav-inner">
+      <a class="brand" href="index.html">
+        <div class="brand-badge" aria-hidden></div>
+        <strong>FaceKing</strong>
+      </a>
+
+      <!-- SEARCH (with live dropdown) -->
+      <div class="search" role="search" id="globalSearch">
+        <i class="bi bi-search" aria-hidden style="color:#9ca3af"></i>
+        <input type="search" placeholder="Search FaceKing" aria-label="Search FaceKing" id="searchInput" autocomplete="off" />
+        <div class="search-results" id="searchResults" aria-live="polite"></div>
+      </div>
+
+      <nav class="navicons" aria-label="Primary">
+        <a class="btn-ghost" title="Home" aria-label="Home" href="index.html"><i class="bi bi-house-door"></i></a>
+        <button class="btn-ghost" title="Watch" aria-label="Watch" data-open-watch><i class="bi bi-collection-play"></i></button>
+        <button class="btn-ghost" title="Marketplace" aria-label="Marketplace"><i class="bi bi-shop"></i></button>
+        <button class="btn-ghost" title="Groups" aria-label="Groups"><i class="bi bi-people"></i></button>
+      </nav>
+
+      <div class="actions">
+        <!-- Menu dropdown -->
+        <div class="dropdown">
+          <button class="btn-ghost" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Menu">
+            <i class="bi bi-list"></i>
+          </button>
+          <ul class="dropdown-menu dropdown-menu-end">
+            <li><h6 class="dropdown-header">Menu</h6></li>
+            <li><a class="dropdown-item" href="#">Settings</a></li>
+            <li><a class="dropdown-item" href="#">Help &amp; support</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="#">Log out</a></li>
+          </ul>
+        </div>
+
+        <!-- Messenger dropdown -->
+        <div class="dropdown">
+          <button class="btn-ghost" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Messenger">
+            <i class="bi bi-messenger"></i>
+          </button>
+          <div class="dropdown-menu dropdown-menu-end p-0" style="width:360px; max-height:60vh; overflow:auto">
+            <div class="p-2 border-bottom fw-semibold">Messages</div>
+
+            <a class="dropdown-item d-flex align-items-center gap-2 py-2" href="#" data-open-chat="alex-reyes">
+              <img src="https://ui-avatars.com/api/?name=Alex+Reyes&background=38bdf8&color=fff" class="rounded-circle" width="40" height="40" alt="Alex">
+              <div class="flex-grow-1">
+                <div class="d-flex justify-content-between">
+                  <strong>Alex Reyes</strong>
+                  <small class="text-muted">2m</small>
+                </div>
+                <div class="text-muted small text-truncate">Bro, beach later? 🌅</div>
+              </div>
+            </a>
+
+            <a class="dropdown-item d-flex align-items-center gap-2 py-2" href="#" data-open-chat="jamie-cruz">
+              <img src="https://ui-avatars.com/api/?name=Jamie+Cruz&background=f97316&color=fff" class="rounded-circle" width="40" height="40" alt="Jamie">
+              <div class="flex-grow-1">
+                <div class="d-flex justify-content-between">
+                  <strong>Jamie Cruz</strong>
+                  <small class="text-muted">1h</small>
+                </div>
+                <div class="text-muted small text-truncate">Check this photo spot!</div>
+              </div>
+            </a>
+
+            <a class="dropdown-item d-flex align-items-center gap-2 py-2" href="#" data-open-chat="sam-lee">
+              <img src="https://ui-avatars.com/api/?name=Sam+Lee&background=22c55e&color=fff" class="rounded-circle" width="40" height="40" alt="Sam">
+              <div class="flex-grow-1">
+                <div class="d-flex justify-content-between">
+                  <strong>Sam Lee</strong>
+                  <small class="text-muted">1d</small>
+                </div>
+                <div class="text-muted small text-truncate">Silent Hill vibes 🔥</div>
+              </div>
+            </a>
+
+            <div class="border-top">
+              <a class="dropdown-item text-center py-2" href="#">See all in Messenger</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Notifications dropdown -->
+        <div class="dropdown">
+          <button class="btn-ghost" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Notifications">
+            <i class="bi bi-bell"></i>
+          </button>
+          <ul class="dropdown-menu dropdown-menu-end">
+            <li><h6 class="dropdown-header">Notifications</h6></li>
+            <li><a class="dropdown-item" href="#">Pat reacted to your photo</a></li>
+            <li><a class="dropdown-item" href="#">Alex Reyes sent a message</a></li>
+          </ul>
+        </div>
+
+        <a href="profile.html?u=roi" title="Your profile">
+          <img class="avatar" src="https://ui-avatars.com/api/?name=Roi&background=2563eb&color=fff" alt="Your avatar" loading="lazy">
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Layout -->
+  <div class="container row layout" role="main">
+    <!-- Left Sidebar -->
+    <aside class="leftbar">
+      <div class="row">
+        <a class="item" href="profile.html?u=roi"><i class="bi bi-person-circle"></i><span>Your profile</span></a>
+        <a class="item" href="profile.html?u=roi&tab=friends"><i class="bi bi-people"></i><span>Friends</span></a>
+        <div class="item"><i class="bi bi-clock-history"></i><span>Memories</span></div>
+        <div class="item"><i class="bi bi-bookmark"></i><span>Saved</span></div>
+        <div class="item"><i class="bi bi-people-fill"></i><span>Groups</span></div>
+        <div class="item"><i class="bi bi-shop"></i><span>Marketplace</span></div>
+        <div class="item" data-open-watch><i class="bi bi-collection-play"></i><span>Watch</span></div>
+        <div class="item"><i class="bi bi-calendar-event"></i><span>Events</span></div>
+        <div class="item"><i class="bi bi-flag"></i><span>Pages</span></div>
+        <div class="item"><i class="bi bi-clock"></i><span>Most recent</span></div>
+
+        <div class="muted" style="margin:8px 8px 0">Shortcuts</div>
+        <div class="item"><i class="bi bi-hash"></i><span>Project #1</span></div>
+        <div class="item"><i class="bi bi-hash"></i><span>Project #2</span></div>
+        <div class="item"><i class="bi bi-hash"></i><span>Project #3</span></div>
+      </div>
+    </aside>
+
+    <!-- Feed -->
+    <section class="feed">
+      <!-- Stories -->
+      <div class="card shadow" style="padding:12px">
+        <div class="stories" aria-label="Stories">
+          <div class="story">
+            <a href="profile.html?u=roi"><img class="story-rect" src="https://picsum.photos/seed/story1/300/500" alt="Story 1" loading="lazy"></a>
+            <div class="story-name">You</div>
+          </div>
+          <div class="story">
+            <a href="profile.html?u=alex-reyes"><img class="story-rect" src="https://picsum.photos/seed/story2/300/500" alt="Story 2" loading="lazy"></a>
+            <div class="story-name">Alex Reyes</div>
+          </div>
+          <div class="story">
+            <a href="profile.html?u=jamie-cruz"><img class="story-rect" src="https://picsum.photos/seed/story3/300/500" alt="Story 3" loading="lazy"></a>
+            <div class="story-name">Jamie Cruz</div>
+          </div>
+          <div class="story">
+            <a href="profile.html?u=sam-lee"><img class="story-rect" src="https://picsum.photos/seed/story4/300/500" alt="Story 4" loading="lazy"></a>
+            <div class="story-name">Sam Lee</div>
+          </div>
+          <div class="story">
+            <a href="profile.html?u=pat-diaz"><img class="story-rect" src="https://picsum.photos/seed/story5/300/500" alt="Story 5" loading="lazy"></a>
+            <div class="story-name">Pat Diaz</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Composer -->
+      <div class="card shadow composer">
+        <div style="display:flex; align-items:center; gap:12px">
+          <img class="avatar" src="https://ui-avatars.com/api/?name=Roi&background=2563eb&color=fff" alt="Your avatar" loading="lazy">
+          <div class="composer-input" role="textbox" aria-label="What's on your mind?">What's on your mind, Roi?</div>
+        </div>
+        <div class="composer-actions">
+          <div class="chip"><i class="bi bi-broadcast"></i> Live</div>
+          <div class="chip"><i class="bi bi-image"></i> Photo</div>
+          <div class="chip"><i class="bi bi-emoji-smile"></i> Feeling</div>
+        </div>
+      </div>
+
+      <!-- Post 1 -->
+      <article class="card shadow post" aria-label="Post by Alex Reyes" data-post="1">
+        <div class="post-head">
+          <a href="profile.html?u=alex-reyes"><img class="avatar" src="https://ui-avatars.com/api/?name=Alex+Reyes&background=38bdf8&color=fff" alt="Alex avatar" loading="lazy"></a>
+          <div class="post-meta" style="flex:1">
+            <a class="name" href="profile.html?u=alex-reyes">Alex Reyes</a>
+            <div class="time"><i class="bi bi-globe2"></i> 2h · Manila</div>
+          </div>
+          <div class="dropdown">
+            <button class="btn-ghost" data-bs-toggle="dropdown" aria-expanded="false" aria-label="More">
+              <i class="bi bi-three-dots"></i>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end">
+              <li><button class="dropdown-item" type="button">Save post</button></li>
+              <li><button class="dropdown-item" type="button">Hide post</button></li>
+              <li><button class="dropdown-item" type="button">Snooze 30 days</button></li>
+              <li><hr class="dropdown-divider"></li>
+              <li><button class="dropdown-item text-danger" type="button">Report</button></li>
+            </ul>
+          </div>
+        </div>
+        <div class="post-caption">At the beach 🌅</div>
+        <div class="post-media"><img src="https://picsum.photos/seed/post1/800/450" alt="beach sand" loading="lazy" style="width:100%;height:100%;object-fit:cover"></div>
+        <div class="post-stats"><div><i class="bi bi-hand-thumbs-up"></i> 1.2k</div><div>324 comments · 87 shares</div></div>
+        <div class="post-actions">
+          <button class="btn"><i class="bi bi-hand-thumbs-up"></i> Like</button>
+          <button class="btn"><i class="bi bi-chat"></i> Comment</button>
+          <button class="btn"><i class="bi bi-share"></i> Share</button>
+        </div>
+        <div class="comments"></div>
+        <div class="commentbar">
+          <img class="avatar" src="https://ui-avatars.com/api/?name=Roi&background=2563eb&color=fff" alt="Your avatar" loading="lazy">
+          <input class="input" type="text" placeholder="Write a comment…" aria-label="Write a comment" data-comment-input="1">
+          <button class="send" aria-label="Post comment" data-comment-send="1"><i class="bi bi-send"></i></button>
+        </div>
+      </article>
+
+      <!-- Post 2 -->
+      <article class="card shadow post" aria-label="Post by Jamie Cruz" data-post="2">
+        <div class="post-head">
+          <a href="profile.html?u=jamie-cruz"><img class="avatar" src="https://ui-avatars.com/api/?name=Jamie+Cruz&background=f97316&color=fff" alt="Jamie avatar" loading="lazy"></a>
+          <div class="post-meta" style="flex:1">
+            <a class="name" href="profile.html?u=jamie-cruz">Jamie Cruz</a>
+            <div class="time"><i class="bi bi-people"></i> 5h · Friends</div>
+          </div>
+          <div class="dropdown">
+            <button class="btn-ghost" data-bs-toggle="dropdown" aria-expanded="false" aria-label="More">
+              <i class="bi bi-three-dots"></i>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end">
+              <li><button class="dropdown-item" type="button">Save post</button></li>
+              <li><button class="dropdown-item" type="button">Hide post</button></li>
+              <li><button class="dropdown-item" type="button">Snooze 30 days</button></li>
+              <li><hr class="dropdown-divider"></li>
+              <li><button class="dropdown-item text-danger" type="button">Report</button></li>
+            </ul>
+          </div>
+        </div>
+        <div class="post-caption">How awesome nature can be</div>
+        <div class="post-media"><img src="https://picsum.photos/seed/post2/800/450" alt="train rails" loading="lazy" style="width:100%;height:100%;object-fit:cover"></div>
+        <div class="post-stats"><div><i class="bi bi-hand-thumbs-up"></i> 842</div><div>129 comments · 22 shares</div></div>
+        <div class="post-actions">
+          <button class="btn"><i class="bi bi-hand-thumbs-up"></i> Like</button>
+          <button class="btn"><i class="bi bi-chat"></i> Comment</button>
+          <button class="btn"><i class="btn bi bi-share"></i> Share</button>
+        </div>
+        <div class="comments"></div>
+        <div class="commentbar">
+          <img class="avatar" src="https://ui-avatars.com/api/?name=Roi&background=2563eb&color=fff" alt="Your avatar" loading="lazy">
+          <input class="input" type="text" placeholder="Write a comment…" aria-label="Write a comment" data-comment-input="2">
+          <button class="send" aria-label="Post comment" data-comment-send="2"><i class="bi bi-send"></i></button>
+        </div>
+      </article>
+
+      <!-- Post 3 -->
+      <article class="card shadow post" aria-label="Post by Sam Lee" data-post="3">
+        <div class="post-head">
+          <a href="profile.html?u=sam-lee"><img class="avatar" src="https://ui-avatars.com/api/?name=Sam+Lee&background=22c55e&color=fff" alt="Sam avatar" loading="lazy"></a>
+          <div class="post-meta" style="flex:1">
+            <a class="name" href="profile.html?u=sam-lee">Sam Lee</a>
+            <div class="time"><i class="bi bi-building"></i> 1d · Public</div>
+          </div>
+          <div class="dropdown">
+            <button class="btn-ghost" data-bs-toggle="dropdown" aria-expanded="false" aria-label="More">
+              <i class="bi bi-three-dots"></i>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end">
+              <li><button class="dropdown-item" type="button">Save post</button></li>
+              <li><button class="dropdown-item" type="button">Hide post</button></li>
+              <li><button class="dropdown-item" type="button">Snooze 30 days</button></li>
+              <li><hr class="dropdown-divider"></li>
+              <li><button class="dropdown-item text-danger" type="button">Report</button></li>
+            </ul>
+          </div>
+        </div>
+        <div class="post-caption">Silent Hill Vibes! 🔥</div>
+        <div class="post-media"><img src="https://picsum.photos/seed/post3/800/450" alt="Dashboard screenshot" loading="lazy" style="width:100%;height:100%;object-fit:cover"></div>
+        <div class="post-stats"><div><i class="bi bi-hand-thumbs-up"></i> 2.4k</div><div>458 comments · 190 shares</div></div>
+        <div class="post-actions">
+          <button class="btn"><i class="bi bi-hand-thumbs-up"></i> Like</button>
+          <button class="btn"><i class="bi bi-chat"></i> Comment</button>
+          <button class="btn"><i class="bi bi-share"></i> Share</button>
+        </div>
+        <div class="comments"></div>
+        <div class="commentbar">
+          <img class="avatar" src="https://ui-avatars.com/api/?name=Roi&background=2563eb&color=fff" alt="Your avatar" loading="lazy">
+          <input class="input" type="text" placeholder="Write a comment…" aria-label="Write a comment" data-comment-input="3">
+          <button class="send" aria-label="Post comment" data-comment-send="3"><i class="bi bi-send"></i></button>
+        </div>
+      </article>
+    </section>
+
+    <!-- Right Sidebar -->
+    <aside class="rightbar">
+      <section class="section">
+        <h3>Sponsored</h3>
+        <div class="card shadow" style="padding:12px">
+          <div style="display:flex; gap:12px; align-items:center">
+            <img class="avatar" style="width:80px; height:80px" src="https://picsum.photos/seed/ad/160/160" alt="Ad" loading="lazy">
+            <div style="flex:1">
+              <div style="font-weight:600">FocusFlow — Minimal To-Do</div>
+              <div class="muted" style="margin-top:4px">Spend less time planning, more time doing.</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <h3>Birthdays</h3>
+        <div class="card shadow bday-wrap">
+          <div style="display:flex; align-items:center; gap:12px; padding:8px 0">
+            <a href="profile.html?u=pat-diaz"><img class="avatar" style="width:36px; height:36px" src="https://ui-avatars.com/api/?name=Pat+Diaz&background=f43f5e&color=fff" alt="Pat avatar" loading="lazy"></a>
+            <div><strong>Pat Diaz</strong> has a birthday today.</div>
+          </div>
+
+          <button class="btn" id="bdayToggle"><i class="bi bi-chat"></i> Send a message to make their day!</button>
+
+          <div class="bday-box" id="bdayBox" aria-live="polite">
+            <textarea id="bdayTextarea" placeholder="Write a sweet birthday message… 🥳"></textarea>
+            <div class="bday-actions">
+              <button class="btn" id="bdayCancel"><i class="bi bi-x-circle"></i> Cancel</button>
+              <button class="btn" id="bdaySend"><i class="bi bi-send"></i> Send</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div style="display:flex; align-items:center; justify-content:space-between">
+          <h3>Contacts</h3>
+          <div style="display:flex; gap:6px">
+            <button class="btn-ghost" title="New call" aria-label="New call"><i class="bi bi-telephone"></i></button>
+            <button class="btn-ghost" title="Search" aria-label="Search contacts"><i class="bi bi-search"></i></button>
+            <button class="btn-ghost" title="Options" aria-label="Options"><i class="bi bi-three-dots-vertical"></i></button>
+          </div>
+        </div>
+        <div class="card" style="padding:8px 4px">
+          <div id="contactsList" style="display:grid; gap:4px"></div>
+        </div>
+      </section>
+    </aside>
+  </div>
+
+  <!-- Messenger Dock -->
+  <div id="chatDock" class="chat-dock" aria-live="polite"></div>
+
+  <!-- WATCH: Home overlay (grid of videos) -->
+  <div id="watchOverlay" class="watch-overlay" aria-hidden="true">
+    <div class="watch-sheet card shadow">
+      <div class="watch-head">
+        <div class="watch-title"><i class="bi bi-collection-play"></i> Watch</div>
+        <button class="btn-ghost" id="watchClose" aria-label="Close"><i class="bi bi-x-lg"></i></button>
+      </div>
+      <div id="watchList" class="watch-grid" aria-live="polite"></div>
+    </div>
+  </div>
+
+  <!-- WATCH: Player -->
+  <div id="watchPlayer" class="watch-player" aria-hidden="true">
+    <div class="player-card card shadow">
+      <button class="btn-ghost player-close" id="watchPlayerClose" aria-label="Close"><i class="bi bi-x-lg"></i></button>
+      <div class="player-video ratio ratio-16x9">
+        <video id="wpVideo" controls playsinline preload="metadata" poster=""></video>
+      </div>
+      <div class="player-meta">
+        <div class="player-acc">
+          <img id="wpAvatar" class="avatar" width="36" height="36" alt="">
+          <div class="player-acc-text">
+            <div class="player-name">
+              <span id="wpName"></span>
+              <i id="wpVerified" class="bi bi-patch-check-fill verified" title="Verified" aria-hidden="true"></i>
+            </div>
+            <div class="player-sub muted" id="wpSub"></div>
+          </div>
+        </div>
+        <div class="player-title" id="wpTitle"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Shared chat dock -->
+  <script src="chat.js"></script>
+
+  <script>
+    /* ===== Helpers ===== */
+    function escapeHtml(s){
+      return String(s).replace(/[&<>"']/g, function(c){
+        return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]);
+      });
+    }
+    function qsa(sel, root){ return Array.prototype.slice.call((root||document).querySelectorAll(sel)); }
+
+    /* ===== Comments ===== */
+    function addComment(postId){
+      var input = document.querySelector('[data-comment-input="'+postId+'"]');
+      var list  = document.querySelector('article[data-post="'+postId+'"] .comments');
+      var text  = input ? String(input.value).trim() : '';
+      if(!text || !list) return;
+      var el = document.createElement('div');
+      el.className = 'comment';
+      el.innerHTML =
+        '<img class="avatar" src="https://ui-avatars.com/api/?name=Roi&background=2563eb&color=fff" alt="Your avatar" width="32" height="32" style="width:32px;height:32px">'+
+        '<div class="bubble"><span class="who">Roi</span>'+escapeHtml(text)+'</div>';
+      list.appendChild(el);
+      if(input) input.value = '';
+      list.scrollTop = list.scrollHeight;
+    }
+    qsa('[data-comment-send]').forEach(function(btn){
+      btn.addEventListener('click', function(){ addComment(btn.getAttribute('data-comment-send')); });
+    });
+    qsa('[data-comment-input]').forEach(function(inp){
+      inp.addEventListener('keydown', function(e){
+        if(e.key==='Enter'){ e.preventDefault(); addComment(inp.getAttribute('data-comment-input')); }
+      });
+    });
+
+    /* ===== Birthday box ===== */
+    var bdayToggle   = document.getElementById('bdayToggle');
+    var bdayBox      = document.getElementById('bdayBox');
+    var bdayTextarea = document.getElementById('bdayTextarea');
+    var bdaySend     = document.getElementById('bdaySend');
+    var bdayCancel   = document.getElementById('bdayCancel');
+
+    if(bdayToggle && bdayBox && bdayTextarea && bdaySend && bdayCancel){
+      bdayToggle.addEventListener('click', function(){ bdayToggle.classList.add('hidden'); bdayBox.style.display='block'; setTimeout(function(){ bdayTextarea.focus(); },0); });
+      bdayCancel.addEventListener('click', function(){ bdayTextarea.value=''; bdayBox.style.display='none'; bdayToggle.classList.remove('hidden'); });
+      bdaySend.addEventListener('click', function(){
+        var msg=(bdayTextarea.value||'').trim(); if(!msg){ bdayTextarea.focus(); return; }
+        bdayBox.outerHTML = '<div class="muted" style="padding:8px 0; display:flex; align-items:center; gap:8px"><i class="bi bi-check-circle"></i> Message sent to Pat Diaz 🎉</div>';
+      });
+      bdayTextarea.addEventListener('keydown', function(e){ if((e.ctrlKey||e.metaKey) && e.key==='Enter'){ e.preventDefault(); bdaySend.click(); }});
+    }
+
+    /* ===== Messenger Dock Data ===== */
+    var me = { slug:'roi', name:'Roi', avatar:'https://ui-avatars.com/api/?name=Roi&background=2563eb&color=fff' };
+    var contacts = {
+      'alex-reyes': { name:'Alex Reyes', avatar:'https://ui-avatars.com/api/?name=Alex+Reyes&background=38bdf8&color=fff', presence:'Active now' },
+      'jamie-cruz': { name:'Jamie Cruz', avatar:'https://ui-avatars.com/api/?name=Jamie+Cruz&background=f97316&color=fff', presence:'Active 1h ago' },
+      'sam-lee':    { name:'Sam Lee',    avatar:'https://ui-avatars.com/api/?name=Sam+Lee&background=22c55e&color=fff', presence:'Active now' },
+      'pat-diaz':   { name:'Pat Diaz',   avatar:'https://ui-avatars.com/api/?name=Pat+Diaz&background=f43f5e&color=fff', presence:'Active today' },
+      'kai':        { name:'Kai',        avatar:'https://ui-avatars.com/api/?name=Kai&background=475569&color=fff', presence:'Active now' },
+      'mika':       { name:'Mika',       avatar:'https://ui-avatars.com/api/?name=Mika&background=22c55e&color=fff', presence:'Active now' },
+      'luis':       { name:'Luis',       avatar:'https://ui-avatars.com/api/?name=Luis&background=0ea5e9&color=fff', presence:'Active today' },
+      'ava':        { name:'Ava',        avatar:'https://ui-avatars.com/api/?name=Ava&background=f59e0b&color=fff', presence:'Active 3h ago' }
+    };
+
+    // Build contacts list UI
+    var contactsListEl = document.getElementById('contactsList');
+    if (contactsListEl){
+      var html = '';
+      Object.keys(contacts).forEach(function(slug){
+        var u = contacts[slug];
+        html +=
+          '<div class="item" data-chat="'+slug+'">'+
+            '<img class="avatar" style="width:32px;height:32px" src="'+u.avatar+'" alt="'+escapeHtml(u.name)+'" loading="lazy">'+
+            '<span>'+escapeHtml(u.name)+'</span>'+
+            '<span title="'+escapeHtml(u.presence)+'" style="margin-left:auto;width:10px;height:10px;border-radius:999px;background:'+(/Active/.test(u.presence)?'#10b981':'#9ca3af')+'"></span>'+
+          '</div>';
+      });
+      contactsListEl.innerHTML = html;
+    }
+
+    /* ===== SEARCH (people) ===== */
+    (function(){
+      var input = document.getElementById('searchInput');
+      var box   = document.getElementById('searchResults');
+      var wrap  = document.getElementById('globalSearch');
+      if(!input || !box || !wrap) return;
+
+      // Build index from contacts + You
+      var index = [{ slug: 'roi', name: 'You', avatar: me.avatar, presence: '' }];
+      Object.keys(contacts).forEach(function(slug){
+        var u = contacts[slug];
+        index.push({ slug: slug, name: u.name, avatar: u.avatar, presence: u.presence || '' });
+      });
+
+      var activeIdx = -1;
+      var currentResults = [];
+
+      function normalize(s){
+        return String(s||'').toLowerCase().normalize('NFKD').replace(/[\u0300-\u036f]/g,'');
+      }
+
+      function renderResults(list){
+        currentResults = list.slice(0, 8);
+        activeIdx = currentResults.length ? 0 : -1;
+        if (!currentResults.length){ box.classList.remove('show'); box.innerHTML=''; return; }
+        var html = '<div class="result-section">People</div>';
+        for (var i=0;i<currentResults.length;i++){
+          var item = currentResults[i];
+          html +=
+            '<a href="profile.html?u='+encodeURIComponent(item.slug)+'" class="result-item'+(i===activeIdx?' active':'')+'" data-result-index="'+i+'">'+
+              '<img src="'+item.avatar+'" alt="'+escapeHtml(item.name)+'">'+
+              '<div class="result-meta"><strong>'+escapeHtml(item.name)+'</strong><small>'+escapeHtml(item.presence||"")+'</small></div>'+
+              '<span class="result-action" title="Message" data-message="'+item.slug+'"><i class="bi bi-send"></i></span>'+
+            '</a>';
+        }
+        box.innerHTML = html;
+        box.classList.add('show');
+      }
+
+      var debTimer=null;
+      input.addEventListener('input', function(){
+        clearTimeout(debTimer);
+        var q = normalize(input.value);
+        debTimer = setTimeout(function(){
+          if (!q){ renderResults([]); return; }
+          var results = index.filter(function(it){
+            return normalize(it.name).indexOf(q) !== -1 || normalize(it.slug).indexOf(q) !== -1;
+          });
+          renderResults(results);
+        }, 80);
+      });
+
+      box.addEventListener('mousedown', function(e){ e.preventDefault(); });
+      box.addEventListener('click', function(e){
+        var msgBtn = e.target.closest('[data-message]');
+        if (msgBtn){
+          e.preventDefault();
+          window.openChat(msgBtn.getAttribute('data-message'));
+          input.blur();
+          box.classList.remove('show');
+          return;
+        }
+        var row = e.target.closest('.result-item');
+        if (row){ box.classList.remove('show'); }
+      });
+
+      input.addEventListener('blur', function(){ setTimeout(function(){ box.classList.remove('show'); }, 120); });
+      input.addEventListener('focus', function(){ if (input.value && currentResults.length){ box.classList.add('show'); } });
+      input.addEventListener('keydown', function(e){
+        if (!box.classList.contains('show')) return;
+        if (e.key === 'Escape'){ box.classList.remove('show'); input.value=''; return; }
+        if (e.key === 'ArrowDown' || e.key === 'ArrowUp'){
+          e.preventDefault();
+          if (!currentResults.length) return;
+          activeIdx += (e.key==='ArrowDown' ? 1 : -1);
+          if (activeIdx < 0) activeIdx = currentResults.length - 1;
+          if (activeIdx >= currentResults.length) activeIdx = 0;
+          var rows = box.querySelectorAll('.result-item');
+          for (var i=0;i<rows.length;i++){
+            if (i===activeIdx) rows[i].classList.add('active'); else rows[i].classList.remove('active');
+          }
+          var activeEl = rows[activeIdx];
+          if (activeEl && activeEl.scrollIntoView) activeEl.scrollIntoView({ block:'nearest' });
+          return;
+        }
+        if (e.key === 'Enter'){
+          e.preventDefault();
+          if (activeIdx>=0 && currentResults[activeIdx]){
+            var slug = currentResults[activeIdx].slug;
+            window.location.href = 'profile.html?u='+encodeURIComponent(slug);
+            box.classList.remove('show');
+          }
+        }
+      });
+    })();
+
+    /* ===== WATCH: demo catalog ===== */
+    var WATCH_VIDEOS = [
+      {
+        id:'w1',
+        title:'Tears of Steel (short cut)',
+        account:{ name:'Open Movies', slug:'openmovies', verified:true, avatar:'https://picsum.photos/seed/acc1/80/80' },
+        poster:'https://picsum.photos/seed/v1/960/540',
+        sources:[ { src:'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4', type:'video/mp4' } ],
+        duration:'4:12', sub:'1.2M views · 2h'
+      },
+      {
+        id:'w2',
+        title:'Big Buck Bunny (clip)',
+        account:{ name:'Blender', slug:'blender', verified:true, avatar:'https://picsum.photos/seed/acc2/80/80' },
+        poster:'https://picsum.photos/seed/v2/960/540',
+        sources:[ { src:'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4', type:'video/mp4' } ],
+        duration:'8:47', sub:'248k views · 5h'
+      },
+      {
+        id:'w3',
+        title:'Sintel (clip)',
+        account:{ name:'Blender', slug:'blender', verified:true, avatar:'https://picsum.photos/seed/acc3/80/80' },
+        poster:'https://picsum.photos/seed/v3/960/540',
+        sources:[ { src:'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4', type:'video/mp4' } ],
+        duration:'2:03', sub:'54k views · 1d'
+      },
+      {
+        id:'w4',
+        title:'For Bigger Joyrides',
+        account:{ name:'Chrome Demos', slug:'chromedemos', verified:true, avatar:'https://picsum.photos/seed/acc4/80/80' },
+        poster:'https://picsum.photos/seed/v4/960/540',
+        sources:[ { src:'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4', type:'video/mp4' } ],
+        duration:'12:20', sub:'980k views · 3d'
+      }
+    ];
+
+    function $(sel, root){ return (root||document).querySelector(sel); }
+    function $all(sel, root){ return Array.prototype.slice.call((root||document).querySelectorAll(sel)); }
+    function esc(s){ return String(s||'').replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+
+    var watchOverlay  = document.getElementById('watchOverlay');
+    var watchList     = document.getElementById('watchList');
+    var watchCloseBtn = document.getElementById('watchClose');
+
+    var watchPlayer   = document.getElementById('watchPlayer');
+    var wpVideo       = document.getElementById('wpVideo');
+    var wpTitle       = document.getElementById('wpTitle');
+    var wpName        = document.getElementById('wpName');
+    var wpVerified    = document.getElementById('wpVerified');
+    var wpSub         = document.getElementById('wpSub');
+    var wpAvatar      = document.getElementById('wpAvatar');
+    var watchPlayerCloseBtn = document.getElementById('watchPlayerClose');
+
+    function buildWatchHome(){
+      if (!watchList) return;
+      var html = WATCH_VIDEOS.map(function(v, i){
+        return `
+          <article class="watch-card" data-vid="${esc(v.id)}" data-index="${i}">
+            <div class="watch-thumb">
+              <img src="${esc(v.poster)}" alt="${esc(v.title)}">
+              <span class="watch-dur">${esc(v.duration)}</span>
+            </div>
+            <div class="watch-body">
+              <img src="${esc(v.account.avatar)}" alt="${esc(v.account.name)}">
+              <div class="watch-text">
+                <div class="watch-title-line">${esc(v.title)}</div>
+                <div class="watch-name">
+                  <span>${esc(v.account.name)}</span>
+                  ${v.account.verified ? '<i class="bi bi-patch-check-fill verified" title="Verified" aria-hidden="true"></i>' : ''}
+                </div>
+                <div class="watch-sub">${esc(v.sub)}</div>
+              </div>
+            </div>
+          </article>`;
+      }).join('');
+      watchList.innerHTML = html;
+    }
+
+    function openWatch(){ buildWatchHome(); watchOverlay.classList.add('show'); watchOverlay.setAttribute('aria-hidden','false'); document.body.style.overflow = 'hidden'; }
+    function closeWatch(){ watchOverlay.classList.remove('show'); watchOverlay.setAttribute('aria-hidden','true'); document.body.style.overflow = ''; }
+
+    function setPlayer(videoObj){
+      while (wpVideo.firstChild) wpVideo.removeChild(wpVideo.firstChild);
+      (videoObj.sources||[]).forEach(function(s){
+        var src = document.createElement('source'); src.src = s.src; src.type = s.type || '';
+        wpVideo.appendChild(src);
+      });
+      wpVideo.poster = videoObj.poster || '';
+      wpVideo.load();
+      wpTitle.textContent = videoObj.title || '';
+      wpName.textContent  = videoObj.account?.name || '';
+      wpVerified.style.display = videoObj.account?.verified ? '' : 'none';
+      wpSub.textContent   = videoObj.sub || '';
+      wpAvatar.src        = videoObj.account?.avatar || '';
+      wpAvatar.alt        = (videoObj.account?.name || '') + ' avatar';
+    }
+
+    function openPlayerByIndex(i){
+      var v = WATCH_VIDEOS[i]; if (!v) return;
+      setPlayer(v);
+      watchPlayer.classList.add('show');
+      watchPlayer.setAttribute('aria-hidden','false');
+      document.body.style.overflow = 'hidden';
+      $all('video').forEach(function(el){ if (el!==wpVideo) el.pause(); });
+    }
+    function closePlayer(){ wpVideo.pause(); watchPlayer.classList.remove('show'); watchPlayer.setAttribute('aria-hidden','true'); if (!watchOverlay.classList.contains('show')) document.body.style.overflow = ''; }
+
+    document.addEventListener('click', function(e){
+      var opener = e.target.closest('[data-open-watch]');
+      if (opener){ e.preventDefault(); openWatch(); }
+    });
+    watchCloseBtn?.addEventListener('click', closeWatch);
+    watchOverlay?.addEventListener('click', function(e){ if (e.target === watchOverlay) closeWatch(); });
+    watchList?.addEventListener('click', function(e){
+      var card = e.target.closest('.watch-card'); if (!card) return;
+      var idx = Number(card.getAttribute('data-index') || -1);
+      openPlayerByIndex(idx);
+    });
+    watchPlayerCloseBtn?.addEventListener('click', closePlayer);
+    document.addEventListener('keydown', function(e){
+      if (e.key === 'Escape'){
+        if (watchPlayer.classList.contains('show')) closePlayer();
+        else if (watchOverlay.classList.contains('show')) closeWatch();
+      }
+    });
+    watchPlayer?.addEventListener('click', function(e){ if (e.target === watchPlayer) closePlayer(); });
+    document.addEventListener('play', function(e){ if (e.target.tagName !== 'VIDEO') return; $all('video').forEach(function(v){ if (v!==e.target) v.pause(); }); }, true);
+
+    /* Wire Contacts click -> open chat */
+    if (contactsListEl){
+      contactsListEl.addEventListener('click', function(e){
+        var item = e.target.closest('[data-chat]');
+        if(!item) return;
+        window.openChat(item.getAttribute('data-chat'));
+      });
+    }
+
+    /* Messenger dropdown: open chat */
+    document.addEventListener('click', function(e){
+      var a = e.target.closest('[data-open-chat]');
+      if(!a) return;
+      e.preventDefault();
+      window.openChat(a.getAttribute('data-open-chat'));
+    });
+
+    /* Init shared chat (set this AFTER me & contacts are defined) */
+    var replies = {
+      'alex-reyes': ['😎','Okay','Hmmm?','I love you <3','Sige!','😂','🙌','👍','🔥','Alright','💯','🎉','🥳','🤝','Appreciate it!'],
+      'jamie-cruz': ['😎','Okay','Hmmm?','I love you <3','Sige!','😂','🙌','👍','🔥','Alright','💯','🎉','🥳','🤝','Appreciate it!'],
+      'sam-lee':    ['😎','Okay','Hmmm?','I love you <3','Sige!','😂','🙌','👍','🔥','Alright','💯','🎉','🥳','🤝','Appreciate it!'],
+      'pat-diaz':   ['😎','Okay','Hmmm?','I love you <3','Sige!','😂','🙌','👍','🔥','Alright','💯','🎉','🥳','🤝','Appreciate it!'],
+      default:      ['👍','Ok','Haha','Noted','Sure','😂','😄','🙌','👌']
+    };
+    const chatAPI = ChatDock.init({ me, contacts, replies, dockSelector:'#chatDock' });
+    window.openChat = chatAPI.open;
+  </script>
+
+  <!-- Bootstrap 5 JS (dropdowns) -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
