@@ -1,175 +1,500 @@
 <!DOCTYPE html>
 <html lang="en">
-<head> 
-  <meta charset="utf-8" /> 
-  <meta name="viewport" content="width=device-width, initial-scale=1" /> 
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>FaceKing - Made by Roi</title>
 
   <!-- Bootstrap 5 CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-
   <!-- Bootstrap Icons -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
   <style>
-    :root { --bg:#f6f7f8; --panel:#fff; --text:#0a0a0a; --muted:#6b7280; --line:#e5e7eb; --soft:#f3f4f6; --brand:#2563eb; --radius:16px; }
-    *{ box-sizing:border-box }
-    html,body{ height:100% }
-    body{ margin:0; font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,'Noto Sans','Helvetica Neue',Arial,'Apple Color Emoji','Segoe UI Emoji'; background:var(--bg); color:var(--text); padding-top:56px }
-    a{ color:inherit; text-decoration:none } a:hover{ text-decoration:underline }
-
-    .container{ max-width:1400px; margin:0 auto; padding:0 12px }
-    .row{ display:grid; gap:16px }
-    .card{ background:var(--panel); border:1px solid var(--line); border-radius:var(--radius) }
-    .shadow{ box-shadow:0 1px 2px rgba(0,0,0,.06) }
-    .hidden{ display:none }
-    .btn-ghost{ display:inline-flex; align-items:center; justify-content:center; gap:8px; background:var(--soft); border:none; border-radius:999px; height:40px; width:40px; cursor:pointer; color:var(--text) }
-    .btn-ghost:hover{ transform:translateY(-1px); box-shadow:0 2px 6px rgba(0,0,0,.06) }
-    .avatar{ width:40px; height:40px; border-radius:999px; background:#e5e7eb; object-fit:cover }
-    .muted{ color:var(--muted) }
-    .btn{ display:inline-flex; align-items:center; gap:8px; background:var(--soft); border:1px solid var(--line); border-radius:12px; padding:8px 12px; cursor:pointer }
-
-    .topnav{ position:fixed; top:0; left:0; right:0; z-index:1000; background:rgba(255,255,255,.8); backdrop-filter:saturate(180%) blur(10px); border-bottom:1px solid var(--line) }
-    .topnav-inner{ height:56px; display:flex; align-items:center; justify-content:space-between }
-    .brand{ display:flex; align-items:center; gap:8px }
-    .brand-badge{ width:36px; height:36px; background:var(--brand); border-radius:12px }
-
-    .search{ position:relative; display:none; align-items:center; gap:8px; background:var(--soft); border:1px solid var(--line); border-radius:999px; padding:8px 12px; min-width:260px }
-    .search input{ border:0; outline:0; background:transparent; width:100% }
-
-    .search-results{
-      position:absolute; top:48px; left:0; right:0; z-index:1100;
-      background:#fff; border:1px solid var(--line); border-radius:12px;
-      box-shadow:0 12px 24px rgba(0,0,0,.08);
-      overflow:hidden; display:none; max-height:70vh; overflow-y:auto;
+    :root{
+      --bg:#f6f7f8;
+      --panel:#fff;
+      --text:#0a0a0a;
+      --muted:#6b7280;
+      --line:#e5e7eb;
+      --soft:#f3f4f6;
+      --brand:#2563eb;
+      --radius:16px;
     }
-    .search-results.show{ display:block }
-    .result-item{ display:flex; align-items:center; gap:10px; padding:10px 12px; text-decoration:none; color:inherit }
-    .result-item:hover, .result-item.active{ background:var(--soft) }
-    .result-item img{ width:36px; height:36px; border-radius:999px; object-fit:cover }
-    .result-meta{ display:flex; flex-direction:column; line-height:1.2 }
-    .result-meta small{ color:var(--muted) }
-    .result-action{ margin-left:auto; display:inline-flex; align-items:center; justify-content:center; width:32px; height:32px; border-radius:999px; background:var(--soft); border:1px solid var(--line) }
-    .result-section{ padding:8px 12px; font-weight:600; font-size:12px; color:#374151; background:#fafafa; border-bottom:1px solid var(--line) }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,'Noto Sans','Helvetica Neue',Arial,'Apple Color Emoji','Segoe UI Emoji';
+      background:var(--bg);
+      color:var(--text);
+      padding-top:56px;
+    }
+    a{color:inherit;text-decoration:none}
+    a:hover{text-decoration:underline}
+    .container{max-width:1400px;margin:0 auto;padding:0 12px}
+    .row{display:grid;gap:16px}
+    .card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius)}
+    .shadow{box-shadow:0 1px 2px rgba(0,0,0,.06)}
+    .hidden{display:none}
+    .btn-ghost{
+      display:inline-flex;align-items:center;justify-content:center;gap:8px;
+      background:var(--soft);border:none;border-radius:999px;height:40px;width:40px;
+      cursor:pointer;color:var(--text)
+    }
+    .btn-ghost:hover{transform:translateY(-1px);box-shadow:0 2px 6px rgba(0,0,0,.06)}
+    .avatar{width:40px;height:40px;border-radius:999px;background:#e5e7eb;object-fit:cover}
+    .muted{color:var(--muted)}
 
-    .navicons{ display:none; gap:8px }
-    .actions{ display:flex; gap:8px; align-items:center }
+    /* our custom button, renamed so it doesn't clash with Bootstrap .btn */
+    .btn-soft{
+      display:inline-flex;align-items:center;gap:8px;
+      background:var(--soft);border:1px solid var(--line);
+      border-radius:12px;padding:8px 12px;cursor:pointer;
+    }
 
-    .layout{ grid-template-columns:1fr }
-    .leftbar{ display:none; position:sticky; top:56px; height:calc(100dvh - 56px); overflow:auto; padding:12px }
-    .rightbar{ display:none; position:sticky; top:56px; height:calc(100dvh - 56px); overflow:auto; padding:12px }
-    .feed{ max-width:680px; width:100%; margin:0 auto; padding:16px 0 }
+    /* top nav */
+    .topnav{
+      position:fixed;top:0;left:0;right:0;z-index:1000;
+      background:rgba(255,255,255,.8);
+      backdrop-filter:saturate(180%) blur(10px);
+      border-bottom:1px solid var(--line)
+    }
+    .topnav-inner{height:56px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+    .brand{display:flex;align-items:center;gap:8px;white-space:nowrap}
+    .brand-badge{width:36px;height:36px;background:var(--brand);border-radius:12px}
 
-    .item{ display:flex; align-items:center; gap:12px; padding:8px; border-radius:12px; cursor:pointer }
-    .item:hover{ background:var(--soft) }
-    .item i.bi{ font-size:18px; color:var(--muted); width:24px; display:inline-flex; justify-content:center }
-    .item:hover i.bi{ color:var(--text) }
+    /* search */
+    .search{
+      position:relative;display:none;align-items:center;gap:8px;
+      background:var(--soft);border:1px solid var(--line);border-radius:999px;
+      padding:8px 12px;min-width:260px
+    }
+    .search input{border:0;outline:0;background:transparent;width:100%}
+    .search-results{
+      position:absolute;top:48px;left:0;right:0;z-index:1100;
+      background:#fff;border:1px solid var(--line);border-radius:12px;
+      box-shadow:0 12px 24px rgba(0,0,0,.08);
+      display:none;max-height:70vh;overflow-y:auto
+    }
+    .search-results.show{display:block}
+    .result-section{padding:8px 12px;font-weight:600;font-size:12px;color:#374151;background:#fafafa;border-bottom:1px solid var(--line)}
+    .result-item{display:flex;align-items:center;gap:10px;padding:10px 12px;color:inherit}
+    .result-item:hover,.result-item.active{background:var(--soft)}
+    .result-item img{width:36px;height:36px;border-radius:999px;object-fit:cover}
+    .result-meta{display:flex;flex-direction:column;line-height:1.2}
+    .result-meta small{color:var(--muted)}
+    .result-action{margin-left:auto;display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:999px;background:var(--soft);border:1px solid var(--line)}
 
-    .stories{ display:flex; gap:12px; overflow-x:auto; padding-bottom:4px }
-    .story{ width:112px; flex:0 0 auto }
-    .story-rect{ aspect-ratio:9/16; width:100%; border-radius:16px; object-fit:cover }
-    .story-name{ font-size:12px; margin-top:6px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis }
+    .navicons{display:none;gap:8px}
+    .actions{display:flex;gap:8px;align-items:center}
 
-    .composer{ padding:12px }
-    .composer-input{ flex:1; height:40px; border-radius:999px; background:var(--soft); border:1px solid var(--line); display:flex; align-items:center; padding:0 14px; color:var(--muted) }
-    .composer-actions{ display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-top:10px }
-    .chip{ display:flex; gap:8px; align-items:center; justify-content:center; padding:8px; border-radius:12px; background:var(--soft); border:1px solid var(--line) }
+    /* layout */
+    .layout{grid-template-columns:1fr}
+    .leftbar{display:none;position:sticky;top:56px;height:calc(100dvh - 56px);overflow:auto;padding:12px}
+    .rightbar{display:none;position:sticky;top:56px;height:calc(100dvh - 56px);overflow:auto;padding:12px}
+    .feed{max-width:680px;width:100%;margin:0 auto;padding:16px 0}
 
-    .post{ overflow:hidden }
-    .post-head{ display:flex; gap:12px; padding:16px }
-    .post-meta{ display:flex; flex-direction:column; gap:4px }
-    .post-meta .name{ font-weight:600 }
-    .post-meta .time{ font-size:12px; color:var(--muted); display:flex; align-items:center; gap:6px }
-    .post-media{ aspect-ratio:16/9; background:#e5e7eb; border-bottom:1px solid var(--line) }
-    .post-caption{ padding:0 16px 12px; line-height:1.5 }
-    .post-stats{ display:flex; justify-content:space-between; padding:8px 16px; color:var(--muted); font-size:14px }
-    .post-actions{ display:grid; grid-template-columns:repeat(3,1fr); gap:8px; padding:8px 16px }
-    .post-actions .btn{ display:flex; align-items:center; justify-content:center; gap:8px; background:var(--soft); border:1px solid var(--line); border-radius:12px; padding:10px; font-size:14px; cursor:pointer }
+    .item{display:flex;align-items:center;gap:12px;padding:8px;border-radius:12px;cursor:pointer}
+    .item:hover{background:var(--soft)}
+    .item i.bi{font-size:18px;color:var(--muted);width:24px;display:inline-flex;justify-content:center}
+    .item:hover i.bi{color:var(--text)}
 
-    .comments{ padding:8px 16px; display:grid; gap:8px }
-    .comment{ display:flex; gap:10px }
-    .comment .bubble{ background:var(--soft); border:1px solid var(--line); padding:8px 12px; border-radius:14px }
-    .comment .who{ font-weight:600; margin-right:6px }
-    .commentbar{ display:flex; align-items:center; gap:10px; padding:12px 16px; border-top:1px solid var(--line) }
-    .commentbar .input{ flex:1; height:38px; border-radius:999px; background:var(--soft); border:1px solid var(--line); padding:0 44px 0 14px; outline:none }
-    .commentbar .send{ position:relative; margin-left:-44px; width:38px; height:38px; border-radius:999px; border:0; cursor:pointer; background:transparent; color:var(--muted) }
-    .commentbar .send:hover{ color:var(--text) }
+    /* stories */
+    .stories{display:flex;gap:12px;overflow-x:auto;padding-bottom:4px;scroll-snap-type:x mandatory}
+    .story{width:112px;flex:0 0 auto;scroll-snap-align:start}
+    .story-rect{aspect-ratio:9/16;width:100%;border-radius:16px;object-fit:cover}
+    .story-name{font-size:12px;margin-top:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 
-    .bday-wrap{ padding:8px 12px }
-    .bday-box{ display:none; margin-top:8px }
-    .bday-box textarea{ width:100%; min-height:72px; resize:vertical; border-radius:12px; border:1px solid var(--line); background:var(--soft); padding:10px 12px; outline:none }
-    .bday-actions{ display:flex; justify-content:flex-end; gap:8px; margin-top:8px }
+    /* composer */
+    .composer{padding:12px}
+    .composer-input{flex:1;height:40px;border-radius:999px;background:var(--soft);border:1px solid var(--line);display:flex;align-items:center;padding:0 14px;color:var(--muted)}
+    .composer-actions{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px}
+    .chip{display:flex;gap:8px;align-items:center;justify-content:center;padding:8px;border-radius:12px;background:var(--soft);border:1px solid var(--line)}
 
-    .chat-dock{ position:fixed; right:12px; bottom:0; z-index:1200; display:flex; gap:10px; align-items:flex-end; flex-wrap:wrap-reverse; max-width:calc(100vw - 24px); pointer-events:none }
-    .chat-win{ width:320px; max-width:95vw; background:#fff; border:1px solid var(--line); border-top-left-radius:12px; border-top-right-radius:12px; box-shadow:0 8px 24px rgba(0,0,0,.12); pointer-events:auto }
-    .chat-head{ height:44px; display:flex; align-items:center; justify-content:space-between; gap:8px; padding:0 10px; border-bottom:1px solid var(--line); background:#fff; border-top-left-radius:12px; border-top-right-radius:12px }
-    .chat-head .title{ display:flex; align-items:center; gap:8px; min-width:0 }
-    .chat-head .title img{ width:28px; height:28px; border-radius:999px; object-fit:cover }
-    .chat-head .name{ font-weight:600; overflow:hidden; text-overflow:ellipsis; white-space:nowrap }
-    .chat-body{ height:260px; overflow:auto; padding:10px; background:var(--bg); display:grid; gap:8px }
-    .msg{ max-width:75%; padding:8px 10px; border-radius:14px; border:1px solid var(--line); background:#fff }
-    .msg.me{ margin-left:auto; background:#e0ecff; border-color:#cfe0ff }
-    .meta{ font-size:11px; color:var(--muted); margin-top:4px }
-    .chat-compose{ display:flex; gap:8px; padding:8px; border-top:1px solid var(--line); background:#fff }
-    .chat-compose input{ flex:1; height:36px; border-radius:999px; border:1px solid var(--line); background:var(--soft); padding:0 44px 0 12px; outline:none }
-    .chat-compose button{ width:38px; height:38px; border-radius:999px; border:0; background:var(--brand); color:#fff; cursor:pointer }
-    .chat-head .btn-ghost{ border:1px solid var(--line); background:var(--soft); width:32px; height:32px }
+    /* posts */
+    .post{overflow:hidden}
+    .post-head{display:flex;gap:12px;padding:16px}
+    .post-meta{display:flex;flex-direction:column;gap:4px}
+    .post-meta .name{font-weight:600}
+    .post-meta .time{font-size:12px;color:var(--muted);display:flex;align-items:center;gap:6px}
+    .post-media{aspect-ratio:16/9;background:#e5e7eb;border-bottom:1px solid var(--line)}
+    .post-caption{padding:0 16px 12px;line-height:1.5}
+    .post-stats{display:flex;justify-content:space-between;padding:8px 16px;color:var(--muted);font-size:14px;gap:8px;flex-wrap:wrap}
+    .post-actions{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:8px 16px}
+    .post-actions .btn-soft{display:flex;align-items:center;justify-content:center;gap:8px;background:var(--soft);border:1px solid var(--line);border-radius:12px;padding:10px;font-size:14px;cursor:pointer}
 
-    .dropdown-menu{ border-radius:12px; border:1px solid var(--line) }
+    /* comments */
+    .comments{padding:8px 16px;display:grid;gap:8px}
+    .comment{display:flex;gap:10px}
+    .comment .bubble{background:var(--soft);border:1px solid var(--line);padding:8px 12px;border-radius:14px}
+    .comment .who{font-weight:600;margin-right:6px}
+    .commentbar{display:flex;align-items:center;gap:10px;padding:12px 16px;border-top:1px solid var(--line)}
+    .commentbar .input{flex:1;height:38px;border-radius:999px;background:var(--soft);border:1px solid var(--line);padding:0 44px 0 14px;outline:none}
+    .commentbar .send{position:relative;margin-left:-44px;width:38px;height:38px;border-radius:999px;border:0;cursor:pointer;background:transparent;color:var(--muted)}
+    .commentbar .send:hover{color:var(--text)}
 
-    @media (min-width:640px){ .search{ display:flex } .navicons{ display:flex } }
-    @media (min-width:1024px){ .layout{ grid-template-columns:18rem minmax(0,1fr) } .leftbar{ display:block } }
-    @media (min-width:1280px){ .layout{ grid-template-columns:18rem minmax(0,1fr) 20rem } .rightbar{ display:block } }
-    @media (max-width:900px){ .chat-dock{ display:none } }
+    /* birthdays */
+    .bday-wrap{padding:8px 12px}
+    .bday-box{display:none;margin-top:8px}
+    .bday-box textarea{width:100%;min-height:72px;resize:vertical;border-radius:12px;border:1px solid var(--line);background:var(--soft);padding:10px 12px;outline:none}
+    .bday-actions{display:flex;justify-content:flex-end;gap:8px}
+    .bday-actions .btn-soft{display:inline-flex;}
 
-    /* ===== WATCH (home grid) ===== */
-    .watch-overlay{ position:fixed; inset:0; z-index:1300; display:none; background:rgba(15,23,42,.15); backdrop-filter:blur(8px); align-items:flex-start; justify-content:center; padding:24px 12px; }
-    .watch-overlay.show{ display:flex }
-    .watch-sheet{ width:100%; max-width:1100px; border-radius:16px; overflow:hidden; }
-    .watch-head{ display:flex; align-items:center; justify-content:space-between; padding:10px 12px; border-bottom:1px solid var(--line); background:#fff }
-    .watch-title{ display:flex; align-items:center; gap:8px; font-weight:700 }
-    .watch-grid{ display:grid; gap:12px; padding:12px; grid-template-columns:repeat(auto-fill, minmax(260px, 1fr)); }
-    .watch-card{ display:flex; flex-direction:column; overflow:hidden; border-radius:14px; border:1px solid var(--line); background:#fff; cursor:pointer; }
-    .watch-thumb{ position:relative; aspect-ratio:16/9; background:#e5e7eb; }
-    .watch-thumb img{ width:100%; height:100%; object-fit:cover; display:block }
-    .watch-dur{ position:absolute; right:8px; bottom:8px; font-size:12px; padding:2px 6px; background:rgba(0,0,0,.7); color:#fff; border-radius:8px; }
-    .watch-body{ padding:10px; display:flex; gap:10px }
-    .watch-body img{ width:36px; height:36px; border-radius:999px; object-fit:cover }
-    .watch-text{ display:flex; flex-direction:column; gap:4px }
-    .watch-name{ font-weight:600; display:flex; align-items:center; gap:6px }
-    .watch-name .verified{ color:#0ea5e9; font-size:16px }
-    .watch-sub{ color:var(--muted); font-size:12px }
-    .watch-title-line{ line-height:1.3 }
+    /* chat dock */
+    .chat-dock{
+      position:fixed;right:12px;bottom:0;z-index:1200;
+      display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap-reverse;
+      max-width:calc(100vw - 24px);pointer-events:none
+    }
 
-    /* ===== WATCH (player) ===== */
-    .watch-player{ position:fixed; inset:0; z-index:1400; display:none; background:rgba(2,6,23,.55); backdrop-filter:blur(10px); align-items:center; justify-content:center; padding:24px 12px; }
-    .watch-player.show{ display:flex }
-    .player-card{ width:min(1100px, 96vw); border-radius:16px; overflow:hidden; position:relative }
-    .player-close{ position:absolute; top:8px; right:8px; z-index:2; border:1px solid var(--line); background:var(--soft); }
-    .player-video{ background:#000 }
-    .player-video video{ width:100%; height:100% }
-    .player-meta{ padding:12px; display:flex; flex-direction:column; gap:10px; background:#fff; border-top:1px solid var(--line) }
-    .player-acc{ display:flex; align-items:center; gap:10px }
-    .player-acc .avatar{ width:36px; height:36px }
-    .player-acc-text{ display:flex; flex-direction:column; gap:2px }
-    .player-name{ font-weight:700; display:flex; align-items:center; gap:6px }
-    .player-name .verified{ color:#0ea5e9; font-size:18px }
-    .player-sub{ font-size:12px }
-    .player-title{ font-size:18px; font-weight:600; line-height:1.3 }
+    /* desktop chat window (for chat.js) */
+    .chat-win{
+      width:320px;
+      max-width:95vw;
+      background:#fff;
+      border:1px solid var(--line);
+      border-top-left-radius:12px;
+      border-top-right-radius:12px;
+      box-shadow:0 8px 24px rgba(0,0,0,.12);
+      pointer-events:auto;
+    }
+    .chat-head{
+      height:44px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:8px;
+      padding:0 10px;
+      border-bottom:1px solid var(--line);
+      background:#fff;
+      border-top-left-radius:12px;
+      border-top-right-radius:12px;
+    }
+    .chat-head .title{
+      display:flex;
+      align-items:center;
+      gap:8px;
+      min-width:0;
+    }
+    .chat-head img{
+      width:28px;
+      height:28px;
+      border-radius:999px;
+      object-fit:cover;
+    }
+    .chat-head .name{
+      font-weight:600;
+      overflow:hidden;
+      text-overflow:ellipsis;
+      white-space:nowrap;
+    }
+    .chat-head .btn-ghost{
+      border:1px solid var(--line);
+      background:var(--soft);
+      width:32px;
+      height:32px;
+    }
+    .chat-body{
+      height:260px;
+      overflow:auto;
+      padding:10px;
+      background:var(--bg);
+      display:grid;
+      gap:8px;
+    }
+    .msg{
+      max-width:75%;
+      padding:8px 10px;
+      border-radius:14px;
+      border:1px solid var(--line);
+      background:#fff;
+    }
+    .msg.me{
+      margin-left:auto;
+      background:#e0ecff;
+      border-color:#cfe0ff;
+    }
+    .meta{
+      font-size:11px;
+      color:var(--muted);
+      margin-top:4px;
+    }
+    .chat-compose{
+      display:flex;
+      gap:8px;
+      padding:8px;
+      border-top:1px solid var(--line);
+      background:#fff;
+    }
+    .chat-compose input{
+      flex:1;
+      height:36px;
+      border-radius:999px;
+      border:1px solid var(--line);
+      background:var(--soft);
+      padding:0 44px 0 12px;
+      outline:none;
+    }
+    .chat-compose button{
+      width:38px;
+      height:38px;
+      border-radius:999px;
+      border:0;
+      background:var(--brand);
+      color:#fff;
+      cursor:pointer;
+    }
+
+    /* watch overlay */
+    .watch-overlay{
+      position:fixed;inset:0;z-index:1300;display:none;
+      background:rgba(15,23,42,.15);backdrop-filter:blur(8px);
+      align-items:flex-start;justify-content:center;
+      padding:24px 12px;
+    }
+    .watch-overlay.show{display:flex}
+    .watch-sheet{width:100%;max-width:1100px;border-radius:16px;overflow:hidden;background:#fff}
+    .watch-head{display:flex;align-items:center;justify-content:space-between;padding:10px 12px;border-bottom:1px solid var(--line);background:#fff}
+    .watch-title{display:flex;align-items:center;gap:8px;font-weight:700}
+
+    .watch-grid{
+      display:grid;
+      gap:12px;
+      padding:12px;
+      grid-template-columns:repeat(auto-fill, minmax(260px, 1fr));
+    }
+
+    .watch-card{
+      display:flex;
+      flex-direction:column;
+      border:1px solid var(--line);
+      border-radius:14px;
+      background:#fff;
+      cursor:pointer;
+    }
+
+    .watch-thumb{
+      position:relative;
+      aspect-ratio:16/9;
+      background:#e5e7eb;
+      border-top-left-radius:14px;
+      border-top-right-radius:14px;
+      overflow:hidden;
+    }
+    .watch-thumb img{width:100%;height:100%;object-fit:cover;display:block}
+    .watch-dur{
+      position:absolute;right:8px;bottom:8px;
+      font-size:12px;padding:2px 6px;
+      background:rgba(0,0,0,.7);color:#fff;border-radius:8px;
+    }
+
+    .watch-body{padding:10px 10px 12px;display:flex;gap:8px}
+    .watch-body img{width:32px;height:32px;border-radius:999px;object-fit:cover;flex:none}
+    .watch-text{display:flex;flex-direction:column;gap:4px;min-width:0}
+    .watch-title-line{
+      font-weight:600;line-height:1.3;font-size:14px;
+      display:-webkit-box;
+      -webkit-box-orient:vertical;
+      -webkit-line-clamp:2;
+      overflow:hidden;
+    }
+    .watch-name{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--muted)}
+    .watch-name .verified{color:#0ea5e9;font-size:14px}
+    .watch-sub{font-size:12px;color:var(--muted)}
+
+    /* watch player */
+    .watch-player{
+      position:fixed;inset:0;z-index:1400;display:none;
+      background:rgba(2,6,23,.55);backdrop-filter:blur(10px);
+      align-items:center;justify-content:center;padding:24px 12px;
+    }
+    .watch-player.show{display:flex}
+    .player-card{width:min(1100px,96vw);border-radius:16px;overflow:hidden;position:relative}
+    .player-close{position:absolute;top:8px;right:8px;z-index:2;border:1px solid var(--line);background:var(--soft)}
+    .player-video{background:#000}
+    .player-meta{padding:12px;display:flex;flex-direction:column;gap:10px;background:#fff;border-top:1px solid var(--line)}
+    .player-acc{display:flex;align-items:center;gap:10px}
+    .player-name{font-weight:700;display:flex;align-items:center;gap:6px}
+    .player-name .verified{color:#0ea5e9;font-size:18px}
+    .player-title{font-size:18px;font-weight:600;line-height:1.3}
+
+    /* mobile sheet */
+    .mobile-sheet-overlay{
+      position:fixed;inset:0;background:rgba(15,23,42,.08);
+      backdrop-filter:blur(3px);z-index:1450;display:none;
+    }
+    .mobile-sheet-overlay.show{display:flex}
+    .mobile-sheet{width:82%;max-width:360px;background:#fff;height:100%;box-shadow:0 10px 40px rgba(15,23,42,.08);display:flex;flex-direction:column}
+    .mobile-sheet-head{height:54px;display:flex;align-items:center;justify-content:space-between;gap:8px;padding:0 12px;border-bottom:1px solid #e5e7eb}
+    .mobile-sheet-body{flex:1;overflow-y:auto;padding:10px;display:grid;gap:10px}
+    .mobile-section-title{font-size:12px;font-weight:600;color:#6b7280;margin-top:4px}
+    .mobile-list-item{display:flex;align-items:center;gap:10px;padding:6px 4px;border-radius:10px;cursor:pointer}
+    .mobile-list-item:hover{background:#f3f4f6}
+    .mobile-list-item img{width:32px;height:32px;border-radius:999px;object-fit:cover}
+    .mobile-list-item .name{flex:1}
+    .online-dot{width:10px;height:10px;border-radius:999px;background:#10b981;margin-left:auto}
+
+    /* fab - keep hidden everywhere now */
+    .chat-fab{
+      position:fixed;right:14px;bottom:14px;width:46px;height:46px;border-radius:999px;background:#2563eb;
+      color:#fff;border:0;display:none;align-items:center;justify-content:center;z-index:1500;
+      box-shadow:0 10px 28px rgba(37,99,235,.45);
+    }
+
+    @media (min-width:640px){
+      .search{display:flex}
+      .navicons{display:flex}
+    }
+    @media (min-width:1024px){
+      .layout{grid-template-columns:18rem minmax(0,1fr)}
+      .leftbar{display:block}
+    }
+    @media (min-width:1280px){
+      .layout{grid-template-columns:18rem minmax(0,1fr) 20rem}
+      .rightbar{display:block}
+    }
+    @media (max-width:900px){
+      .chat-dock{display:none}
+    }
+    @media (max-width:640px){
+      body{background:#fff}
+      .container,.container.layout,.topnav .container{max-width:100%;margin:0;padding:0}
+      .topnav-inner{padding:0 10px}
+      .feed{width:100%;max-width:100%;margin:0;padding:12px 0 64px}
+      .feed>.card{border-radius:0;border-left:0;border-right:0}
+      .mobile-left-btn{display:inline-flex !important}
+
+      .watch-overlay{align-items:stretch;justify-content:flex-start;padding:0}
+      .watch-sheet{max-width:100%;height:100%;border-radius:0}
+      .watch-head{position:sticky;top:0;z-index:1}
+      .watch-grid{grid-template-columns:1fr;padding:12px;overflow-y:auto}
+      .watch-player{padding:0}
+      .watch-player .player-card{width:100%;height:100%;max-width:100%;border-radius:0}
+      .watch-player .player-video{width:100%}
+    }
+
+    .mobile-left-btn{display:none}
+
+    /* mobile chat overlay (used by chat.js) */
+    .chat-mobile-overlay{
+      position:fixed;
+      inset:0;
+      background:rgba(15,23,42,.12);
+      backdrop-filter:blur(4px);
+      z-index:1500;
+      display:none;
+    }
+    .chat-mobile-overlay.show{ display:flex; }
+    .chat-mobile{
+      background:#fff;
+      width:100%;
+      height:100%;
+      display:flex;
+      flex-direction:column;
+    }
+    .chat-mobile-head{
+      height:52px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:8px;
+      padding:0 12px;
+      border-bottom:1px solid #e5e7eb;
+    }
+    .chat-mobile-head .title{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      min-width:0;
+    }
+    .chat-mobile-head img{
+      width:32px;
+      height:32px;
+      border-radius:999px;
+      object-fit:cover;
+    }
+    .chat-mobile-head .name{
+      font-weight:600;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+    .chat-mobile-body{
+      flex:1;
+      overflow-y:auto;
+      padding:12px;
+      display:grid;
+      gap:8px;
+      background:#f6f7f8;
+    }
+    .chat-mobile-msg{
+      max-width:78%;
+      background:#fff;
+      border:1px solid #e5e7eb;
+      border-radius:14px;
+      padding:7px 10px;
+      font-size:14px;
+    }
+    .chat-mobile-msg.me{
+      margin-left:auto;
+      background:#e0ecff;
+      border-color:#cfe0ff;
+    }
+    .chat-mobile-meta{
+      font-size:11px;
+      color:#6b7280;
+      margin-top:4px;
+    }
+    .chat-mobile-compose{
+      display:flex;
+      gap:8px;
+      padding:8px 12px 12px;
+      border-top:1px solid #e5e7eb;
+      background:#fff;
+    }
+    .chat-mobile-compose input{
+      flex:1;
+      height:40px;
+      border-radius:999px;
+      border:1px solid #e5e7eb;
+      background:#f3f4f6;
+      padding:0 14px;
+      outline:none;
+    }
+    .chat-mobile-compose button{
+      width:40px;
+      height:40px;
+      border-radius:999px;
+      border:0;
+      background:#2563eb;
+      color:#fff;
+      cursor:pointer;
+    }
+
   </style>
 </head>
 <body>
   <!-- Top Navigation -->
   <header class="topnav">
     <div class="container topnav-inner">
-      <a class="brand" href="index.html">
-        <div class="brand-badge" aria-hidden></div>
-        <strong>FaceKing</strong>
-      </a>
+      <div style="display:flex;gap:8px;align-items:center">
+        <button class="btn-ghost mobile-left-btn" id="mobileMenuBtn" aria-label="Menu">
+          <i class="bi bi-list"></i>
+        </button>
+        <a class="brand" href="index.html">
+          <div class="brand-badge" aria-hidden="true" style="display:flex;align-items:center;justify-content:center;background:#2563eb;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+              <path d="M4 7.5 8.5 11 12 5 15.5 11 20 7.5V17a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7.5z" stroke="white" stroke-width="1.4" stroke-linejoin="round"/>
+              <path d="M8 18.5h8" stroke="white" stroke-width="1.4" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <span style="font-weight:700;">FaceKing</span>
+        </a>
+      </div>
 
-      <!-- SEARCH (with live dropdown) -->
       <div class="search" role="search" id="globalSearch">
-        <i class="bi bi-search" aria-hidden style="color:#9ca3af"></i>
+        <i class="bi bi-search" aria-hidden="true" style="color:#9ca3af"></i>
         <input type="search" placeholder="Search FaceKing" aria-label="Search FaceKing" id="searchInput" autocomplete="off" />
         <div class="search-results" id="searchResults" aria-live="polite"></div>
       </div>
@@ -182,7 +507,6 @@
       </nav>
 
       <div class="actions">
-        <!-- Menu dropdown -->
         <div class="dropdown">
           <button class="btn-ghost" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Menu">
             <i class="bi bi-list"></i>
@@ -196,14 +520,12 @@
           </ul>
         </div>
 
-        <!-- Messenger dropdown -->
         <div class="dropdown">
           <button class="btn-ghost" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Messenger">
             <i class="bi bi-messenger"></i>
           </button>
-          <div class="dropdown-menu dropdown-menu-end p-0" style="width:360px; max-height:60vh; overflow:auto">
+          <div class="dropdown-menu dropdown-menu-end p-0" style="width:360px;max-height:60vh;overflow:auto">
             <div class="p-2 border-bottom fw-semibold">Messages</div>
-
             <a class="dropdown-item d-flex align-items-center gap-2 py-2" href="#" data-open-chat="alex-reyes">
               <img src="https://ui-avatars.com/api/?name=Alex+Reyes&background=38bdf8&color=fff" class="rounded-circle" width="40" height="40" alt="Alex">
               <div class="flex-grow-1">
@@ -214,7 +536,6 @@
                 <div class="text-muted small text-truncate">Bro, beach later? 🌅</div>
               </div>
             </a>
-
             <a class="dropdown-item d-flex align-items-center gap-2 py-2" href="#" data-open-chat="jamie-cruz">
               <img src="https://ui-avatars.com/api/?name=Jamie+Cruz&background=f97316&color=fff" class="rounded-circle" width="40" height="40" alt="Jamie">
               <div class="flex-grow-1">
@@ -225,7 +546,6 @@
                 <div class="text-muted small text-truncate">Check this photo spot!</div>
               </div>
             </a>
-
             <a class="dropdown-item d-flex align-items-center gap-2 py-2" href="#" data-open-chat="sam-lee">
               <img src="https://ui-avatars.com/api/?name=Sam+Lee&background=22c55e&color=fff" class="rounded-circle" width="40" height="40" alt="Sam">
               <div class="flex-grow-1">
@@ -236,14 +556,13 @@
                 <div class="text-muted small text-truncate">Silent Hill vibes 🔥</div>
               </div>
             </a>
-
             <div class="border-top">
-              <a class="dropdown-item text-center py-2" href="#">See all in Messenger</a>
+              <!-- clicking this should open the mobile sheet with contacts -->
+              <a class="dropdown-item text-center py-2" href="#" data-open-messenger-list>See all in Messenger</a>
             </div>
           </div>
         </div>
 
-        <!-- Notifications dropdown -->
         <div class="dropdown">
           <button class="btn-ghost" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Notifications">
             <i class="bi bi-bell"></i>
@@ -262,11 +581,30 @@
     </div>
   </header>
 
+  <!-- MOBILE SHEET -->
+  <div id="mobileSheet" class="mobile-sheet-overlay" aria-hidden="true">
+    <div class="mobile-sheet">
+      <div class="mobile-sheet-head">
+        <div style="display:flex;align-items:center;gap:10px">
+          <img src="https://ui-avatars.com/api/?name=Roi&background=2563eb&color=fff" width="34" height="34" style="border-radius:999px" alt="Roi">
+          <div>
+            <div style="font-weight:600">Roi</div>
+            <div style="font-size:12px;color:#6b7280">See your profile</div>
+          </div>
+        </div>
+        <button id="mobileSheetClose" class="btn-ghost" style="width:34px;height:34px;border:1px solid #e5e7eb">
+          <i class="bi bi-x-lg"></i>
+        </button>
+      </div>
+      <div class="mobile-sheet-body" id="mobileSheetBody"></div>
+    </div>
+  </div>
+
   <!-- Main Layout -->
   <div class="container row layout" role="main">
     <!-- Left Sidebar -->
     <aside class="leftbar">
-      <div class="row">
+      <div class="row" id="leftBarItems">
         <a class="item" href="profile.html?u=roi"><i class="bi bi-person-circle"></i><span>Your profile</span></a>
         <a class="item" href="profile.html?u=roi&tab=friends"><i class="bi bi-people"></i><span>Friends</span></a>
         <div class="item"><i class="bi bi-clock-history"></i><span>Memories</span></div>
@@ -315,7 +653,7 @@
 
       <!-- Composer -->
       <div class="card shadow composer">
-        <div style="display:flex; align-items:center; gap:12px">
+        <div style="display:flex;align-items:center;gap:12px">
           <img class="avatar" src="https://ui-avatars.com/api/?name=Roi&background=2563eb&color=fff" alt="Your avatar" loading="lazy">
           <div class="composer-input" role="textbox" aria-label="What's on your mind?">What's on your mind, Roi?</div>
         </div>
@@ -326,7 +664,7 @@
         </div>
       </div>
 
-      <!-- Post 1 -->
+      <!-- Posts -->
       <article class="card shadow post" aria-label="Post by Alex Reyes" data-post="1">
         <div class="post-head">
           <a href="profile.html?u=alex-reyes"><img class="avatar" src="https://ui-avatars.com/api/?name=Alex+Reyes&background=38bdf8&color=fff" alt="Alex avatar" loading="lazy"></a>
@@ -351,9 +689,9 @@
         <div class="post-media"><img src="https://picsum.photos/seed/post1/800/450" alt="beach sand" loading="lazy" style="width:100%;height:100%;object-fit:cover"></div>
         <div class="post-stats"><div><i class="bi bi-hand-thumbs-up"></i> 1.2k</div><div>324 comments · 87 shares</div></div>
         <div class="post-actions">
-          <button class="btn"><i class="bi bi-hand-thumbs-up"></i> Like</button>
-          <button class="btn"><i class="bi bi-chat"></i> Comment</button>
-          <button class="btn"><i class="bi bi-share"></i> Share</button>
+          <button class="btn-soft"><i class="bi bi-hand-thumbs-up"></i> Like</button>
+          <button class="btn-soft"><i class="bi bi-chat"></i> Comment</button>
+          <button class="btn-soft"><i class="bi bi-share"></i> Share</button>
         </div>
         <div class="comments"></div>
         <div class="commentbar">
@@ -363,7 +701,6 @@
         </div>
       </article>
 
-      <!-- Post 2 -->
       <article class="card shadow post" aria-label="Post by Jamie Cruz" data-post="2">
         <div class="post-head">
           <a href="profile.html?u=jamie-cruz"><img class="avatar" src="https://ui-avatars.com/api/?name=Jamie+Cruz&background=f97316&color=fff" alt="Jamie avatar" loading="lazy"></a>
@@ -388,9 +725,9 @@
         <div class="post-media"><img src="https://picsum.photos/seed/post2/800/450" alt="train rails" loading="lazy" style="width:100%;height:100%;object-fit:cover"></div>
         <div class="post-stats"><div><i class="bi bi-hand-thumbs-up"></i> 842</div><div>129 comments · 22 shares</div></div>
         <div class="post-actions">
-          <button class="btn"><i class="bi bi-hand-thumbs-up"></i> Like</button>
-          <button class="btn"><i class="bi bi-chat"></i> Comment</button>
-          <button class="btn"><i class="btn bi bi-share"></i> Share</button>
+          <button class="btn-soft"><i class="bi bi-hand-thumbs-up"></i> Like</button>
+          <button class="btn-soft"><i class="bi bi-chat"></i> Comment</button>
+          <button class="btn-soft"><i class="bi bi-share"></i> Share</button>
         </div>
         <div class="comments"></div>
         <div class="commentbar">
@@ -400,7 +737,6 @@
         </div>
       </article>
 
-      <!-- Post 3 -->
       <article class="card shadow post" aria-label="Post by Sam Lee" data-post="3">
         <div class="post-head">
           <a href="profile.html?u=sam-lee"><img class="avatar" src="https://ui-avatars.com/api/?name=Sam+Lee&background=22c55e&color=fff" alt="Sam avatar" loading="lazy"></a>
@@ -425,9 +761,9 @@
         <div class="post-media"><img src="https://picsum.photos/seed/post3/800/450" alt="Dashboard screenshot" loading="lazy" style="width:100%;height:100%;object-fit:cover"></div>
         <div class="post-stats"><div><i class="bi bi-hand-thumbs-up"></i> 2.4k</div><div>458 comments · 190 shares</div></div>
         <div class="post-actions">
-          <button class="btn"><i class="bi bi-hand-thumbs-up"></i> Like</button>
-          <button class="btn"><i class="bi bi-chat"></i> Comment</button>
-          <button class="btn"><i class="bi bi-share"></i> Share</button>
+          <button class="btn-soft"><i class="bi bi-hand-thumbs-up"></i> Like</button>
+          <button class="btn-soft"><i class="bi bi-chat"></i> Comment</button>
+          <button class="btn-soft"><i class="bi bi-share"></i> Share</button>
         </div>
         <div class="comments"></div>
         <div class="commentbar">
@@ -443,8 +779,8 @@
       <section class="section">
         <h3>Sponsored</h3>
         <div class="card shadow" style="padding:12px">
-          <div style="display:flex; gap:12px; align-items:center">
-            <img class="avatar" style="width:80px; height:80px" src="https://picsum.photos/seed/ad/160/160" alt="Ad" loading="lazy">
+          <div style="display:flex;gap:12px;align-items:center">
+            <img class="avatar" style="width:80px;height:80px" src="https://picsum.photos/seed/ad/160/160" alt="Ad" loading="lazy">
             <div style="flex:1">
               <div style="font-weight:600">FocusFlow — Minimal To-Do</div>
               <div class="muted" style="margin-top:4px">Spend less time planning, more time doing.</div>
@@ -456,34 +792,34 @@
       <section class="section">
         <h3>Birthdays</h3>
         <div class="card shadow bday-wrap">
-          <div style="display:flex; align-items:center; gap:12px; padding:8px 0">
-            <a href="profile.html?u=pat-diaz"><img class="avatar" style="width:36px; height:36px" src="https://ui-avatars.com/api/?name=Pat+Diaz&background=f43f5e&color=fff" alt="Pat avatar" loading="lazy"></a>
+          <div style="display:flex;align-items:center;gap:12px;padding:8px 0">
+            <a href="profile.html?u=pat-diaz"><img class="avatar" style="width:36px;height:36px" src="https://ui-avatars.com/api/?name=Pat+Diaz&background=f43f5e&color=fff" alt="Pat avatar" loading="lazy"></a>
             <div><strong>Pat Diaz</strong> has a birthday today.</div>
           </div>
 
-          <button class="btn" id="bdayToggle"><i class="bi bi-chat"></i> Send a message to make their day!</button>
+          <button class="btn-soft" id="bdayToggle"><i class="bi bi-chat"></i> Send a message to make their day!</button>
 
           <div class="bday-box" id="bdayBox" aria-live="polite">
             <textarea id="bdayTextarea" placeholder="Write a sweet birthday message… 🥳"></textarea>
             <div class="bday-actions">
-              <button class="btn" id="bdayCancel"><i class="bi bi-x-circle"></i> Cancel</button>
-              <button class="btn" id="bdaySend"><i class="bi bi-send"></i> Send</button>
+              <button class="btn-soft" id="bdayCancel"><i class="bi bi-x-circle"></i> Cancel</button>
+              <button class="btn-soft" id="bdaySend"><i class="bi bi-send"></i> Send</button>
             </div>
           </div>
         </div>
       </section>
 
       <section class="section">
-        <div style="display:flex; align-items:center; justify-content:space-between">
+        <div style="display:flex;align-items:center;justify-content:space-between">
           <h3>Contacts</h3>
-          <div style="display:flex; gap:6px">
+          <div style="display:flex;gap:6px">
             <button class="btn-ghost" title="New call" aria-label="New call"><i class="bi bi-telephone"></i></button>
             <button class="btn-ghost" title="Search" aria-label="Search contacts"><i class="bi bi-search"></i></button>
             <button class="btn-ghost" title="Options" aria-label="Options"><i class="bi bi-three-dots-vertical"></i></button>
           </div>
         </div>
         <div class="card" style="padding:8px 4px">
-          <div id="contactsList" style="display:grid; gap:4px"></div>
+          <div id="contactsList" style="display:grid;gap:4px"></div>
         </div>
       </section>
     </aside>
@@ -492,7 +828,7 @@
   <!-- Messenger Dock -->
   <div id="chatDock" class="chat-dock" aria-live="polite"></div>
 
-  <!-- WATCH: Home overlay (grid of videos) -->
+  <!-- WATCH: Home overlay -->
   <div id="watchOverlay" class="watch-overlay" aria-hidden="true">
     <div class="watch-sheet card shadow">
       <div class="watch-head">
@@ -508,7 +844,12 @@
     <div class="player-card card shadow">
       <button class="btn-ghost player-close" id="watchPlayerClose" aria-label="Close"><i class="bi bi-x-lg"></i></button>
       <div class="player-video ratio ratio-16x9">
-        <video id="wpVideo" controls playsinline preload="metadata" poster=""></video>
+        <iframe id="wpIframe"
+          src=""
+          title="YouTube video player"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowfullscreen
+          style="width:100%;height:100%;border:0;"></iframe>
       </div>
       <div class="player-meta">
         <div class="player-acc">
@@ -526,19 +867,24 @@
     </div>
   </div>
 
+  <!-- Mobile floating button (now hidden everywhere) -->
+  <button id="chatFab" class="chat-fab" aria-label="Messages">
+    <i class="bi bi-messenger"></i>
+  </button>
+
   <!-- Shared chat dock -->
   <script src="chat.js"></script>
 
   <script>
-    /* ===== Helpers ===== */
     function escapeHtml(s){
-      return String(s).replace(/[&<>"']/g, function(c){
+      return String(s).replace(/[&<>"']/g,function(c){
         return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]);
       });
     }
-    function qsa(sel, root){ return Array.prototype.slice.call((root||document).querySelectorAll(sel)); }
+    function qsa(sel,root){return Array.prototype.slice.call((root||document).querySelectorAll(sel));}
+    function $(sel,root){return (root||document).querySelector(sel);}
 
-    /* ===== Comments ===== */
+    /* comments */
     function addComment(postId){
       var input = document.querySelector('[data-comment-input="'+postId+'"]');
       var list  = document.querySelector('article[data-post="'+postId+'"] .comments');
@@ -550,36 +896,47 @@
         '<img class="avatar" src="https://ui-avatars.com/api/?name=Roi&background=2563eb&color=fff" alt="Your avatar" width="32" height="32" style="width:32px;height:32px">'+
         '<div class="bubble"><span class="who">Roi</span>'+escapeHtml(text)+'</div>';
       list.appendChild(el);
-      if(input) input.value = '';
+      if(input) input.value='';
       list.scrollTop = list.scrollHeight;
     }
     qsa('[data-comment-send]').forEach(function(btn){
-      btn.addEventListener('click', function(){ addComment(btn.getAttribute('data-comment-send')); });
+      btn.addEventListener('click',function(){addComment(btn.getAttribute('data-comment-send'));});
     });
     qsa('[data-comment-input]').forEach(function(inp){
-      inp.addEventListener('keydown', function(e){
-        if(e.key==='Enter'){ e.preventDefault(); addComment(inp.getAttribute('data-comment-input')); }
+      inp.addEventListener('keydown',function(e){
+        if(e.key==='Enter'){e.preventDefault();addComment(inp.getAttribute('data-comment-input')); }
       });
     });
 
-    /* ===== Birthday box ===== */
-    var bdayToggle   = document.getElementById('bdayToggle');
-    var bdayBox      = document.getElementById('bdayBox');
-    var bdayTextarea = document.getElementById('bdayTextarea');
-    var bdaySend     = document.getElementById('bdaySend');
-    var bdayCancel   = document.getElementById('bdayCancel');
-
-    if(bdayToggle && bdayBox && bdayTextarea && bdaySend && bdayCancel){
-      bdayToggle.addEventListener('click', function(){ bdayToggle.classList.add('hidden'); bdayBox.style.display='block'; setTimeout(function(){ bdayTextarea.focus(); },0); });
-      bdayCancel.addEventListener('click', function(){ bdayTextarea.value=''; bdayBox.style.display='none'; bdayToggle.classList.remove('hidden'); });
-      bdaySend.addEventListener('click', function(){
-        var msg=(bdayTextarea.value||'').trim(); if(!msg){ bdayTextarea.focus(); return; }
-        bdayBox.outerHTML = '<div class="muted" style="padding:8px 0; display:flex; align-items:center; gap:8px"><i class="bi bi-check-circle"></i> Message sent to Pat Diaz 🎉</div>';
+    /* birthday */
+    (function(){
+      var bdayToggle   = $('#bdayToggle');
+      var bdayBox      = $('#bdayBox');
+      var bdayTextarea = $('#bdayTextarea');
+      var bdaySend     = $('#bdaySend');
+      var bdayCancel   = $('#bdayCancel');
+      if(!bdayToggle) return;
+      bdayToggle.addEventListener('click',function(){
+        bdayToggle.classList.add('hidden');
+        bdayBox.style.display='block';
+        setTimeout(function(){bdayTextarea.focus();},0);
       });
-      bdayTextarea.addEventListener('keydown', function(e){ if((e.ctrlKey||e.metaKey) && e.key==='Enter'){ e.preventDefault(); bdaySend.click(); }});
-    }
+      bdayCancel.addEventListener('click',function(){
+        bdayTextarea.value='';
+        bdayBox.style.display='none';
+        bdayToggle.classList.remove('hidden');
+      });
+      bdaySend.addEventListener('click',function(){
+        var msg=(bdayTextarea.value||'').trim();
+        if(!msg){bdayTextarea.focus();return;}
+        bdayBox.outerHTML='<div class="muted" style="padding:8px 0;display:flex;align-items:center;gap:8px"><i class="bi bi-check-circle"></i> Message sent to Pat Diaz 🎉</div>';
+      });
+      bdayTextarea.addEventListener('keydown',function(e){
+        if((e.ctrlKey||e.metaKey)&&e.key==='Enter'){e.preventDefault();bdaySend.click();}
+      });
+    })();
 
-    /* ===== Messenger Dock Data ===== */
+    /* data */
     var me = { slug:'roi', name:'Roi', avatar:'https://ui-avatars.com/api/?name=Roi&background=2563eb&color=fff' };
     var contacts = {
       'alex-reyes': { name:'Alex Reyes', avatar:'https://ui-avatars.com/api/?name=Alex+Reyes&background=38bdf8&color=fff', presence:'Active now' },
@@ -592,34 +949,87 @@
       'ava':        { name:'Ava',        avatar:'https://ui-avatars.com/api/?name=Ava&background=f59e0b&color=fff', presence:'Active 3h ago' }
     };
 
-    // Build contacts list UI
-    var contactsListEl = document.getElementById('contactsList');
-    if (contactsListEl){
+    /* desktop contacts */
+    (function(){
+      var el = $('#contactsList');
+      if(!el) return;
       var html = '';
       Object.keys(contacts).forEach(function(slug){
         var u = contacts[slug];
-        html +=
-          '<div class="item" data-chat="'+slug+'">'+
-            '<img class="avatar" style="width:32px;height:32px" src="'+u.avatar+'" alt="'+escapeHtml(u.name)+'" loading="lazy">'+
-            '<span>'+escapeHtml(u.name)+'</span>'+
-            '<span title="'+escapeHtml(u.presence)+'" style="margin-left:auto;width:10px;height:10px;border-radius:999px;background:'+(/Active/.test(u.presence)?'#10b981':'#9ca3af')+'"></span>'+
-          '</div>';
+        var online = /Active/.test(u.presence);
+        html += '<div class="item" data-chat="'+slug+'">'+
+          '<img class="avatar" style="width:32px;height:32px" src="'+u.avatar+'" alt="'+escapeHtml(u.name)+'" loading="lazy">'+
+          '<span>'+escapeHtml(u.name)+'</span>'+
+          '<span title="'+escapeHtml(u.presence)+'" style="margin-left:auto;width:10px;height:10px;border-radius:999px;background:'+(online?'#10b981':'#9ca3af')+'"></span>'+
+        '</div>';
       });
-      contactsListEl.innerHTML = html;
-    }
+      el.innerHTML = html;
+      el.addEventListener('click',function(e){
+        var item = e.target.closest('[data-chat]');
+        if(!item) return;
+        window.openChat(item.getAttribute('data-chat'));
+      });
+    })();
 
-    /* ===== SEARCH (people) ===== */
+    /* mobile sheet build */
     (function(){
-      var input = document.getElementById('searchInput');
-      var box   = document.getElementById('searchResults');
-      var wrap  = document.getElementById('globalSearch');
+      var mobileBody = $('#mobileSheetBody');
+      if(!mobileBody) return;
+      var menuHtml = `
+        <div>
+          <div class="mobile-section-title">Menu</div>
+          <div class="mobile-list-item" onclick="location.href='profile.html?u=roi'">
+            <i class="bi bi-person-circle" style="font-size:18px"></i>
+            <div class="name">Your profile</div>
+          </div>
+          <div class="mobile-list-item" onclick="location.href='profile.html?u=roi&tab=friends'">
+            <i class="bi bi-people" style="font-size:18px"></i>
+            <div class="name">Friends</div>
+          </div>
+          <div class="mobile-list-item">
+            <i class="bi bi-bookmark" style="font-size:18px"></i>
+            <div class="name">Saved</div>
+          </div>
+          <div class="mobile-list-item">
+            <i class="bi bi-shop" style="font-size:18px"></i>
+            <div class="name">Marketplace</div>
+          </div>
+          <div class="mobile-list-item" data-open-watch>
+            <i class="bi bi-collection-play" style="font-size:18px"></i>
+            <div class="name">Watch</div>
+          </div>
+        </div>
+      `;
+      var contactsHtml = `
+        <div>
+          <div class="mobile-section-title">Contacts (online)</div>
+          ${Object.keys(contacts).map(function(slug){
+            var u = contacts[slug];
+            var online = /Active/.test(u.presence);
+            return `
+              <div class="mobile-list-item" data-mobile-chat="${slug}">
+                <img src="${u.avatar}" alt="${escapeHtml(u.name)}">
+                <div class="name">${escapeHtml(u.name)}</div>
+                <span class="online-dot" style="background:${online ? '#10b981' : '#9ca3af'}"></span>
+              </div>
+            `;
+          }).join('')}
+        </div>
+      `;
+      mobileBody.innerHTML = menuHtml + contactsHtml;
+    })();
+
+    /* search */
+    (function(){
+      var input = $('#searchInput');
+      var box   = $('#searchResults');
+      var wrap  = $('#globalSearch');
       if(!input || !box || !wrap) return;
 
-      // Build index from contacts + You
-      var index = [{ slug: 'roi', name: 'You', avatar: me.avatar, presence: '' }];
+      var index = [{ slug:'roi', name:'You', avatar:me.avatar, presence:'' }];
       Object.keys(contacts).forEach(function(slug){
         var u = contacts[slug];
-        index.push({ slug: slug, name: u.name, avatar: u.avatar, presence: u.presence || '' });
+        index.push({ slug:slug, name:u.name, avatar:u.avatar, presence:u.presence||'' });
       });
 
       var activeIdx = -1;
@@ -628,240 +1038,307 @@
       function normalize(s){
         return String(s||'').toLowerCase().normalize('NFKD').replace(/[\u0300-\u036f]/g,'');
       }
-
-      function renderResults(list){
-        currentResults = list.slice(0, 8);
+      function render(list){
+        currentResults = list.slice(0,8);
         activeIdx = currentResults.length ? 0 : -1;
-        if (!currentResults.length){ box.classList.remove('show'); box.innerHTML=''; return; }
+        if(!currentResults.length){box.classList.remove('show');box.innerHTML='';return;}
         var html = '<div class="result-section">People</div>';
-        for (var i=0;i<currentResults.length;i++){
-          var item = currentResults[i];
+        currentResults.forEach(function(item,i){
           html +=
             '<a href="profile.html?u='+encodeURIComponent(item.slug)+'" class="result-item'+(i===activeIdx?' active':'')+'" data-result-index="'+i+'">'+
               '<img src="'+item.avatar+'" alt="'+escapeHtml(item.name)+'">'+
               '<div class="result-meta"><strong>'+escapeHtml(item.name)+'</strong><small>'+escapeHtml(item.presence||"")+'</small></div>'+
               '<span class="result-action" title="Message" data-message="'+item.slug+'"><i class="bi bi-send"></i></span>'+
             '</a>';
-        }
+        });
         box.innerHTML = html;
         box.classList.add('show');
       }
 
-      var debTimer=null;
-      input.addEventListener('input', function(){
+      var debTimer = null;
+      input.addEventListener('input',function(){
         clearTimeout(debTimer);
         var q = normalize(input.value);
         debTimer = setTimeout(function(){
-          if (!q){ renderResults([]); return; }
-          var results = index.filter(function(it){
-            return normalize(it.name).indexOf(q) !== -1 || normalize(it.slug).indexOf(q) !== -1;
-          });
-          renderResults(results);
-        }, 80);
+          if(!q){render([]);return;}
+          render(index.filter(function(it){
+            return normalize(it.name).includes(q) || normalize(it.slug).includes(q);
+          }));
+        },80);
       });
 
-      box.addEventListener('mousedown', function(e){ e.preventDefault(); });
-      box.addEventListener('click', function(e){
+      box.addEventListener('mousedown',function(e){e.preventDefault();});
+      box.addEventListener('click',function(e){
         var msgBtn = e.target.closest('[data-message]');
-        if (msgBtn){
+        if(msgBtn){
           e.preventDefault();
           window.openChat(msgBtn.getAttribute('data-message'));
           input.blur();
           box.classList.remove('show');
           return;
         }
-        var row = e.target.closest('.result-item');
-        if (row){ box.classList.remove('show'); }
+        if(e.target.closest('.result-item')) box.classList.remove('show');
       });
 
-      input.addEventListener('blur', function(){ setTimeout(function(){ box.classList.remove('show'); }, 120); });
-      input.addEventListener('focus', function(){ if (input.value && currentResults.length){ box.classList.add('show'); } });
-      input.addEventListener('keydown', function(e){
-        if (!box.classList.contains('show')) return;
-        if (e.key === 'Escape'){ box.classList.remove('show'); input.value=''; return; }
-        if (e.key === 'ArrowDown' || e.key === 'ArrowUp'){
+      input.addEventListener('blur',function(){setTimeout(function(){box.classList.remove('show');},120);});
+      input.addEventListener('focus',function(){if(input.value && currentResults.length){box.classList.add('show');}});
+      input.addEventListener('keydown',function(e){
+        if(!box.classList.contains('show')) return;
+        if(e.key==='Escape'){box.classList.remove('show');input.value='';return;}
+        if(e.key==='ArrowDown' || e.key==='ArrowUp'){
           e.preventDefault();
-          if (!currentResults.length) return;
-          activeIdx += (e.key==='ArrowDown' ? 1 : -1);
-          if (activeIdx < 0) activeIdx = currentResults.length - 1;
-          if (activeIdx >= currentResults.length) activeIdx = 0;
+          if(!currentResults.length) return;
+          activeIdx += (e.key==='ArrowDown'?1:-1);
+          if(activeIdx<0) activeIdx = currentResults.length-1;
+          if(activeIdx>=currentResults.length) activeIdx = 0;
           var rows = box.querySelectorAll('.result-item');
-          for (var i=0;i<rows.length;i++){
-            if (i===activeIdx) rows[i].classList.add('active'); else rows[i].classList.remove('active');
-          }
-          var activeEl = rows[activeIdx];
-          if (activeEl && activeEl.scrollIntoView) activeEl.scrollIntoView({ block:'nearest' });
+          rows.forEach(function(r,i){i===activeIdx?r.classList.add('active'):r.classList.remove('active');});
+          rows[activeIdx]?.scrollIntoView({block:'nearest'});
           return;
         }
-        if (e.key === 'Enter'){
+        if(e.key==='Enter'){
           e.preventDefault();
-          if (activeIdx>=0 && currentResults[activeIdx]){
-            var slug = currentResults[activeIdx].slug;
-            window.location.href = 'profile.html?u='+encodeURIComponent(slug);
+          if(activeIdx>=0 && currentResults[activeIdx]){
+            window.location.href = 'profile.html?u='+encodeURIComponent(currentResults[activeIdx].slug);
             box.classList.remove('show');
           }
         }
       });
     })();
 
-    /* ===== WATCH: demo catalog ===== */
-    var WATCH_VIDEOS = [
+    /* watch data (YouTube version) */
+    const WATCH_VIDEOS = [
       {
-        id:'w1',
-        title:'Tears of Steel (short cut)',
-        account:{ name:'Open Movies', slug:'openmovies', verified:true, avatar:'https://picsum.photos/seed/acc1/80/80' },
-        poster:'https://picsum.photos/seed/v1/960/540',
-        sources:[ { src:'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4', type:'video/mp4' } ],
-        duration:'4:12', sub:'1.2M views · 2h'
+        id: 'yt1',
+        title: 'SPIDER-MAN: NO WAY HOME - Official Teaser Trailer (HD)',
+        account: {
+          name: 'Sony Pictures',
+          slug: 'sonypictures',
+          verified: true,
+          avatar: 'https://picsum.photos/seed/sony/80/80'
+        },
+        poster: 'https://img.youtube.com/vi/rt-2cxAiPJk/hqdefault.jpg',
+        youtube: 'https://www.youtube.com/watch?v=rt-2cxAiPJk',
+        duration: '3:04',
+        sub: '94M views · 4y'
       },
       {
-        id:'w2',
-        title:'Big Buck Bunny (clip)',
-        account:{ name:'Blender', slug:'blender', verified:true, avatar:'https://picsum.photos/seed/acc2/80/80' },
-        poster:'https://picsum.photos/seed/v2/960/540',
-        sources:[ { src:'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4', type:'video/mp4' } ],
-        duration:'8:47', sub:'248k views · 5h'
+        id: 'yt2',
+        title: 'Grand Theft Auto VI Trailer 1',
+        account: {
+          name: 'Rockstar Games',
+          slug: 'rockstargames',
+          verified: true,
+          avatar: 'https://picsum.photos/seed/rockstar/80/80'
+        },
+        poster: 'https://img.youtube.com/vi/QdBZY2fkU-0/hqdefault.jpg',
+        youtube: 'https://www.youtube.com/watch?v=QdBZY2fkU-0',
+        duration: '1:31',
+        sub: '268M views · 1y'
       },
       {
-        id:'w3',
-        title:'Sintel (clip)',
-        account:{ name:'Blender', slug:'blender', verified:true, avatar:'https://picsum.photos/seed/acc3/80/80' },
-        poster:'https://picsum.photos/seed/v3/960/540',
-        sources:[ { src:'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4', type:'video/mp4' } ],
-        duration:'2:03', sub:'54k views · 1d'
+        id: 'yt3',
+        title: 'Marvel’s Spider-Man 2 – Be Greater. Together. Trailer',
+        account: {
+          name: 'PlayStation',
+          slug: 'PlayStation',
+          verified: true,
+          avatar: 'https://picsum.photos/seed/spider/80/80'
+        },
+        poster: 'https://img.youtube.com/vi/nq1M_Wc4FIc/hqdefault.jpg',
+        youtube: 'https://www.youtube.com/watch?v=nq1M_Wc4FIc',
+        duration: '1:37',
+        sub: '22M views · 2y'
       },
       {
-        id:'w4',
-        title:'For Bigger Joyrides',
-        account:{ name:'Chrome Demos', slug:'chromedemos', verified:true, avatar:'https://picsum.photos/seed/acc4/80/80' },
-        poster:'https://picsum.photos/seed/v4/960/540',
-        sources:[ { src:'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4', type:'video/mp4' } ],
-        duration:'12:20', sub:'980k views · 3d'
+        id: 'yt4',
+        title: 'Bye Bye Bye Opening Scene | DEADPOOL & WOLVERINE (2024) Movie CLIP HD',
+        account: {
+          name: 'Marvel',
+          slug: 'Marvel',
+          verified: true,
+          avatar: 'https://picsum.photos/seed/rock2/80/80'
+        },
+        poster: 'https://img.youtube.com/vi/VHAK-gU9gi0/hqdefault.jpg',
+        youtube: 'https://www.youtube.com/watch?v=VHAK-gU9gi0',
+        duration: '4:05',
+        sub: '47M views · 11mo'
       }
     ];
 
-    function $(sel, root){ return (root||document).querySelector(sel); }
-    function $all(sel, root){ return Array.prototype.slice.call((root||document).querySelectorAll(sel)); }
-    function esc(s){ return String(s||'').replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+    const watchOverlay  = $('#watchOverlay');
+    const watchList     = $('#watchList');
+    const watchCloseBtn = $('#watchClose');
+    const watchPlayer   = $('#watchPlayer');
+    const wpIframe      = $('#wpIframe');
+    const wpTitle       = $('#wpTitle');
+    const wpName        = $('#wpName');
+    const wpVerified    = $('#wpVerified');
+    const wpSub         = $('#wpSub');
+    const wpAvatar      = $('#wpAvatar');
+    const watchPlayerCloseBtn = $('#watchPlayerClose');
 
-    var watchOverlay  = document.getElementById('watchOverlay');
-    var watchList     = document.getElementById('watchList');
-    var watchCloseBtn = document.getElementById('watchClose');
-
-    var watchPlayer   = document.getElementById('watchPlayer');
-    var wpVideo       = document.getElementById('wpVideo');
-    var wpTitle       = document.getElementById('wpTitle');
-    var wpName        = document.getElementById('wpName');
-    var wpVerified    = document.getElementById('wpVerified');
-    var wpSub         = document.getElementById('wpSub');
-    var wpAvatar      = document.getElementById('wpAvatar');
-    var watchPlayerCloseBtn = document.getElementById('watchPlayerClose');
-
-    function buildWatchHome(){
-      if (!watchList) return;
-      var html = WATCH_VIDEOS.map(function(v, i){
-        return `
-          <article class="watch-card" data-vid="${esc(v.id)}" data-index="${i}">
-            <div class="watch-thumb">
-              <img src="${esc(v.poster)}" alt="${esc(v.title)}">
-              <span class="watch-dur">${esc(v.duration)}</span>
-            </div>
-            <div class="watch-body">
-              <img src="${esc(v.account.avatar)}" alt="${esc(v.account.name)}">
-              <div class="watch-text">
-                <div class="watch-title-line">${esc(v.title)}</div>
-                <div class="watch-name">
-                  <span>${esc(v.account.name)}</span>
-                  ${v.account.verified ? '<i class="bi bi-patch-check-fill verified" title="Verified" aria-hidden="true"></i>' : ''}
-                </div>
-                <div class="watch-sub">${esc(v.sub)}</div>
-              </div>
-            </div>
-          </article>`;
-      }).join('');
-      watchList.innerHTML = html;
+    function ytToEmbed(url){
+      if(!url) return '';
+      const m = url.match(/(?:v=|youtu\.be\/)([^&?]+)/);
+      const id = m ? m[1] : '';
+      if(!id) return '';
+      return 'https://www.youtube.com/embed/' + id + '?rel=0&autoplay=1';
     }
 
-    function openWatch(){ buildWatchHome(); watchOverlay.classList.add('show'); watchOverlay.setAttribute('aria-hidden','false'); document.body.style.overflow = 'hidden'; }
-    function closeWatch(){ watchOverlay.classList.remove('show'); watchOverlay.setAttribute('aria-hidden','true'); document.body.style.overflow = ''; }
+    function buildWatchHome(){
+      if(!watchList) return;
+      watchList.innerHTML = WATCH_VIDEOS.map(function(v,i){
+        return `
+          <article class="watch-card" data-vid="${v.id}" data-index="${i}">
+            <div class="watch-thumb">
+              <img src="${v.poster}" alt="${escapeHtml(v.title)}">
+              <span class="watch-dur">${v.duration}</span>
+            </div>
+            <div class="watch-body">
+              <img src="${v.account.avatar}" alt="${escapeHtml(v.account.name)}">
+              <div class="watch-text">
+                <div class="watch-title-line">${escapeHtml(v.title)}</div>
+                <div class="watch-name">
+                  <span>${escapeHtml(v.account.name)}</span>
+                  ${v.account.verified ? '<i class="bi bi-patch-check-fill verified" title="Verified" aria-hidden="true"></i>' : ''}
+                </div>
+                <div class="watch-sub">${escapeHtml(v.sub)}</div>
+              </div>
+            </div>
+          </article>
+        `;
+      }).join('');
+    }
+
+    function openWatch(){
+      const mobileSheet = $('#mobileSheet');
+      if(mobileSheet && mobileSheet.classList.contains('show')){
+        mobileSheet.classList.remove('show');
+        mobileSheet.setAttribute('aria-hidden','true');
+      }
+      buildWatchHome();
+      watchOverlay.classList.add('show');
+      watchOverlay.setAttribute('aria-hidden','false');
+      document.body.style.overflow='hidden';
+    }
+    function closeWatch(){
+      watchOverlay.classList.remove('show');
+      watchOverlay.setAttribute('aria-hidden','true');
+      document.body.style.overflow='';
+    }
 
     function setPlayer(videoObj){
-      while (wpVideo.firstChild) wpVideo.removeChild(wpVideo.firstChild);
-      (videoObj.sources||[]).forEach(function(s){
-        var src = document.createElement('source'); src.src = s.src; src.type = s.type || '';
-        wpVideo.appendChild(src);
-      });
-      wpVideo.poster = videoObj.poster || '';
-      wpVideo.load();
       wpTitle.textContent = videoObj.title || '';
       wpName.textContent  = videoObj.account?.name || '';
       wpVerified.style.display = videoObj.account?.verified ? '' : 'none';
       wpSub.textContent   = videoObj.sub || '';
       wpAvatar.src        = videoObj.account?.avatar || '';
       wpAvatar.alt        = (videoObj.account?.name || '') + ' avatar';
+      const embedUrl = ytToEmbed(videoObj.youtube);
+      wpIframe.src = embedUrl;
     }
 
     function openPlayerByIndex(i){
-      var v = WATCH_VIDEOS[i]; if (!v) return;
+      const v = WATCH_VIDEOS[i];
+      if(!v) return;
       setPlayer(v);
       watchPlayer.classList.add('show');
       watchPlayer.setAttribute('aria-hidden','false');
-      document.body.style.overflow = 'hidden';
-      $all('video').forEach(function(el){ if (el!==wpVideo) el.pause(); });
+      document.body.style.overflow='hidden';
     }
-    function closePlayer(){ wpVideo.pause(); watchPlayer.classList.remove('show'); watchPlayer.setAttribute('aria-hidden','true'); if (!watchOverlay.classList.contains('show')) document.body.style.overflow = ''; }
+    function closePlayer(){
+      if(wpIframe) wpIframe.src = '';
+      watchPlayer.classList.remove('show');
+      watchPlayer.setAttribute('aria-hidden','true');
+      if(!watchOverlay.classList.contains('show')){
+        document.body.style.overflow='';
+      }
+    }
 
-    document.addEventListener('click', function(e){
-      var opener = e.target.closest('[data-open-watch]');
-      if (opener){ e.preventDefault(); openWatch(); }
-    });
-    watchCloseBtn?.addEventListener('click', closeWatch);
-    watchOverlay?.addEventListener('click', function(e){ if (e.target === watchOverlay) closeWatch(); });
-    watchList?.addEventListener('click', function(e){
-      var card = e.target.closest('.watch-card'); if (!card) return;
-      var idx = Number(card.getAttribute('data-index') || -1);
-      openPlayerByIndex(idx);
-    });
-    watchPlayerCloseBtn?.addEventListener('click', closePlayer);
-    document.addEventListener('keydown', function(e){
-      if (e.key === 'Escape'){
-        if (watchPlayer.classList.contains('show')) closePlayer();
-        else if (watchOverlay.classList.contains('show')) closeWatch();
+    document.addEventListener('click',function(e){
+      const opener = e.target.closest('[data-open-watch]');
+      if(opener){e.preventDefault();openWatch();}
+      const openChatBtn = e.target.closest('[data-open-chat]');
+      if(openChatBtn){
+        e.preventDefault();
+        window.openChat(openChatBtn.getAttribute('data-open-chat'));
+      }
+      const openMessengerList = e.target.closest('[data-open-messenger-list]');
+      if(openMessengerList){
+        e.preventDefault();
+        // open the mobile sheet with contacts
+        const ms = document.getElementById('mobileSheet');
+        if(ms){
+          ms.classList.add('show');
+          ms.setAttribute('aria-hidden','false');
+        }
       }
     });
-    watchPlayer?.addEventListener('click', function(e){ if (e.target === watchPlayer) closePlayer(); });
-    document.addEventListener('play', function(e){ if (e.target.tagName !== 'VIDEO') return; $all('video').forEach(function(v){ if (v!==e.target) v.pause(); }); }, true);
 
-    /* Wire Contacts click -> open chat */
-    if (contactsListEl){
-      contactsListEl.addEventListener('click', function(e){
-        var item = e.target.closest('[data-chat]');
-        if(!item) return;
-        window.openChat(item.getAttribute('data-chat'));
-      });
-    }
-
-    /* Messenger dropdown: open chat */
-    document.addEventListener('click', function(e){
-      var a = e.target.closest('[data-open-chat]');
-      if(!a) return;
-      e.preventDefault();
-      window.openChat(a.getAttribute('data-open-chat'));
+    watchCloseBtn?.addEventListener('click',closeWatch);
+    watchOverlay?.addEventListener('click',function(e){
+      if(e.target===watchOverlay) closeWatch();
+    });
+    watchList?.addEventListener('click',function(e){
+      const card = e.target.closest('.watch-card');
+      if(!card) return;
+      const idx = Number(card.getAttribute('data-index')||-1);
+      openPlayerByIndex(idx);
+    });
+    watchPlayerCloseBtn?.addEventListener('click',closePlayer);
+    document.addEventListener('keydown',function(e){
+      if(e.key==='Escape'){
+        if(watchPlayer.classList.contains('show')) closePlayer();
+        else if(watchOverlay.classList.contains('show')) closeWatch();
+      }
+    });
+    watchPlayer?.addEventListener('click',function(e){
+      if(e.target===watchPlayer) closePlayer();
     });
 
-    /* Init shared chat (set this AFTER me & contacts are defined) */
-    var replies = {
-      'alex-reyes': ['😎','Okay','Hmmm?','I love you <3','Sige!','😂','🙌','👍','🔥','Alright','💯','🎉','🥳','🤝','Appreciate it!'],
-      'jamie-cruz': ['😎','Okay','Hmmm?','I love you <3','Sige!','😂','🙌','👍','🔥','Alright','💯','🎉','🥳','🤝','Appreciate it!'],
-      'sam-lee':    ['😎','Okay','Hmmm?','I love you <3','Sige!','😂','🙌','👍','🔥','Alright','💯','🎉','🥳','🤝','Appreciate it!'],
-      'pat-diaz':   ['😎','Okay','Hmmm?','I love you <3','Sige!','😂','🙌','👍','🔥','Alright','💯','🎉','🥳','🤝','Appreciate it!'],
-      default:      ['👍','Ok','Haha','Noted','Sure','😂','😄','🙌','👌']
+    /* chat (from chat.js) */
+    const replies = {
+      'alex-reyes':['😎','Okay','Hmmm?','I love you <3','Sige!','😂','🙌','👍','🔥','Alright','💯','🎉','🥳','🤝','Appreciate it!'],
+      'jamie-cruz':['😎','Okay','Hmmm?','I love you <3','Sige!','😂','🙌','👍','🔥','Alright','💯','🎉','🥳','🤝','Appreciate it!'],
+      'sam-lee':['😎','Okay','Hmmm?','I love you <3','Sige!','😂','🙌','👍','🔥','Alright','💯','🎉','🥳','🤝','Appreciate it!'],
+      'pat-diaz':['😎','Okay','Hmmm?','I love you <3','Sige!','😂','🙌','👍','🔥','Alright','💯','🎉','🥳','🤝','Appreciate it!'],
+      default:['👍','Ok','Haha','Noted','Sure','😂','😄','🙌','👌']
     };
     const chatAPI = ChatDock.init({ me, contacts, replies, dockSelector:'#chatDock' });
-    window.openChat = chatAPI.open;
+    window.openChat = function(slug){ chatAPI.open(slug); };
+
+    // we no longer show chatFab on mobile, but keep listener harmless
+    document.getElementById('chatFab').addEventListener('click',function(){
+      const first = Object.keys(contacts)[0];
+      if(first) window.openChat(first);
+    });
+
+    const msOverlay = document.getElementById('mobileSheet');
+    const msBtn = document.getElementById('mobileMenuBtn');
+    const msClose = document.getElementById('mobileSheetClose');
+
+    msBtn?.addEventListener('click',function(){
+      msOverlay.classList.add('show');
+      msOverlay.setAttribute('aria-hidden','false');
+    });
+    msClose?.addEventListener('click',function(){
+      msOverlay.classList.remove('show');
+      msOverlay.setAttribute('aria-hidden','true');
+    });
+    msOverlay?.addEventListener('click',function(e){
+      if(e.target===msOverlay) msClose.click();
+    });
+    document.getElementById('mobileSheetBody')?.addEventListener('click',function(e){
+      const item = e.target.closest('[data-mobile-chat]');
+      if(!item) return;
+      const slug = item.getAttribute('data-mobile-chat');
+      msClose.click();
+      window.openChat(slug);
+    });
   </script>
 
-  <!-- Bootstrap 5 JS (dropdowns) -->
+  <!-- Bootstrap 5 JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

@@ -8,39 +8,45 @@
   <style>
     :root { --bg:#f6f7f8; --panel:#fff; --text:#0a0a0a; --muted:#6b7280; --line:#e5e7eb; --soft:#f3f4f6; --brand:#2563eb; --radius:16px; }
     *{box-sizing:border-box}
-    body{margin:0;font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,'Noto Sans','Helvetica Neue',Arial,'Apple Color Emoji','Segoe UI Emoji';background:var(--bg);color:var(--text);padding-top:56px}
+    body{
+      margin:0;
+      font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,'Noto Sans','Helvetica Neue',Arial,'Apple Color Emoji','Segoe UI Emoji';
+      background:var(--bg);
+      color:var(--text);
+      padding-top:56px;
+    }
+    a{color:inherit;text-decoration:none} a:hover{text-decoration:underline}
+
     .container{max-width:960px;margin:0 auto;padding:0 12px}
     .card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius)}
     .shadow{box-shadow:0 1px 2px rgba(0,0,0,.06)}
-    a{color:inherit;text-decoration:none} a:hover{text-decoration:underline}
-
-    .topnav{position:fixed;top:0;left:0;right:0;z-index:1000;background:rgba(255,255,255,.8);backdrop-filter:saturate(180%) blur(10px);border-bottom:1px solid var(--line)}
-    .topnav-inner{height:56px;display:flex;align-items:center;justify-content:space-between}
-    .brand{display:flex;align-items:center;gap:8px}
-    .brand-badge{width:36px;height:36px;background:var(--brand);border-radius:12px}
     .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;background:var(--soft);border:1px solid var(--line);border-radius:12px;padding:8px 12px;cursor:pointer}
     .btn.primary{background:var(--brand);border-color:var(--brand);color:#fff}
-    .btn.ghost{background:var(--soft)}
-    .btn.round{border-radius:999px}
+    .btn-ghost{display:inline-flex;align-items:center;justify-content:center;background:var(--soft);border:1px solid var(--line);border-radius:12px;height:40px;padding:0 12px}
     .btn[disabled]{opacity:.6;cursor:not-allowed}
 
+    /* top bar */
+    .topnav{position:fixed;top:0;left:0;right:0;z-index:1000;background:rgba(255,255,255,.8);backdrop-filter:saturate(180%) blur(10px);border-bottom:1px solid var(--line)}
+    .topnav-inner{height:56px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+    .brand{display:flex;align-items:center;gap:8px}
+    .brand-badge{width:36px;height:36px;background:var(--brand);border-radius:12px}
+
+    /* profile header */
     .profile-cover{height:240px;background:#e5e7eb;border-radius:16px;overflow:hidden}
     .profile-cover img{width:100%;height:100%;object-fit:cover}
     .profile-header{position:relative;margin-top:-64px;padding:0 16px 16px}
-    .profile-row{display:grid;grid-template-columns: 1fr auto;gap:16px;align-items:end;}
-    @media (max-width: 700px){ .profile-row{ grid-template-columns: 1fr; align-items:start } .actions{ justify-content:flex-start } }
+    .profile-row{display:grid;grid-template-columns:1fr auto;gap:16px;align-items:end}
     .left{display:flex;gap:16px;align-items:flex-end;min-width:0}
     .profile-avatar{width:128px;height:128px;border-radius:999px;border:4px solid #fff;object-fit:cover;background:#e5e7eb;flex:none}
     .meta{display:flex;flex-direction:column;gap:6px;min-width:0}
     .profile-name{font-size:32px;font-weight:800;color:#000}
-    .profile-bio{color:#111;font-weight:600;font-size:16px}
+    .profile-bio{color:#111;font-weight:600;font-size:16px;display:flex;gap:6px;flex-wrap:wrap}
     .pillbar{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
     .pill{padding:8px 12px;border-radius:999px;border:1px solid var(--line);background:var(--soft);font-size:14px;white-space:nowrap}
     .pill.active{background:#fff;border-color:var(--brand);color:var(--brand);text-decoration:none}
     .actions{display:flex;gap:8px;align-items:center;white-space:nowrap}
-    .btn-ghost{display:inline-flex;align-items:center;justify-content:center;background:var(--soft);border:1px solid var(--line);border-radius:12px;height:40px;padding:0 12px}
-    .btn-ghost i{font-size:18px}
 
+    /* dropdown-ish menu */
     .menu{position:relative}
     .menu-list{position:absolute; right:0; top:calc(100% + 6px); background:#fff; border:1px solid var(--line); border-radius:12px; box-shadow:0 10px 30px rgba(0,0,0,.08); padding:6px; min-width:180px; z-index:10; display:none;}
     .menu-list .item{display:flex;gap:8px;align-items:center;padding:8px 10px;border-radius:8px;cursor:pointer}
@@ -51,6 +57,7 @@
     .grid{display:grid;gap:16px}
     .grid.posts{grid-template-columns:1fr}
 
+    /* posts */
     .post{overflow:hidden}
     .post-head{display:flex;gap:12px;padding:16px}
     .post-meta{display:flex;flex-direction:column;gap:4px}
@@ -58,13 +65,15 @@
     .post-meta .time{font-size:12px;color:var(--muted);display:flex;align-items:center;gap:6px}
     .post-media{aspect-ratio:16/9;background:#e5e7eb;border-bottom:1px solid var(--line)}
     .post-caption{padding:0 16px 12px;line-height:1.5}
-    .post-stats{display:flex;justify-content:space-between;padding:8px 16px;color:var(--muted);font-size:14px}
+    .post-stats{display:flex;justify-content:space-between;padding:8px 16px;color:var(--muted);font-size:14px;gap:8px;flex-wrap:wrap}
     .post-actions{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:8px 16px}
     .post-actions .btn{padding:10px}
 
+    /* about */
     .about.card{padding:16px}
     .about li{margin:6px 0}
 
+    /* friends */
     .friends-wrap{padding:16px}
     .friends-grid{display:grid;gap:16px;grid-template-columns:repeat(2,minmax(0,1fr))}
     @media (min-width: 800px){ .friends-grid{grid-template-columns:repeat(3,minmax(0,1fr))} }
@@ -78,6 +87,7 @@
     .friend-card .actions{display:flex;gap:8px;padding:0 12px 12px;align-items:center;flex-wrap:wrap}
     .friend-card .btn{flex:1}
 
+    /* chat (desktop) */
     .chat-dock{ position:fixed; right:12px; bottom:0; z-index:1200; display:flex; gap:10px; align-items:flex-end; flex-wrap:wrap-reverse; max-width:calc(100vw - 24px); pointer-events:none }
     .chat-win{ width:320px; max-width:95vw; background:#fff; border:1px solid var(--line); border-top-left-radius:12px; border-top-right-radius:12px; box-shadow:0 8px 24px rgba(0,0,0,.12); pointer-events:auto }
     .chat-head{ height:44px; display:flex; align-items:center; justify-content:space-between; gap:8px; padding:0 10px; border-bottom:1px solid var(--line); background:#fff; border-top-left-radius:12px; border-top-right-radius:12px }
@@ -90,35 +100,165 @@
     .meta{ font-size:11px; color:var(--muted); margin-top:4px }
     .chat-compose{ display:flex; gap:8px; padding:8px; border-top:1px solid var(--line); background:#fff }
     .chat-compose input{ flex:1; height:36px; border-radius:999px; border:1px solid var(--line); background:var(--soft); padding:0 44px 0 12px; outline:none }
-    .chat-compose button{ width:38px; height:38px; border-radius:999px; border:0; background:var(--brand); color:#fff; cursor:pointer }
+    .chat-compose button{ width:38px; height:38px; border-radius:999px; border:0; background:#fff; color:#000; cursor:pointer }
     .chat-head .btn-ghost{ border:1px solid var(--line); background:var(--soft); width:32px; height:32px }
     @media (max-width:900px){ .chat-dock{ display:none } }
+
+    /* ===== 📱 MOBILE TWEAKS ===== */
+    @media (max-width: 640px){
+      body{ background:#fff; }
+      .topnav .container{ max-width:100%; padding:0 10px; }
+      .container{max-width:100%;padding:0}
+      .profile-cover{height:180px;border-radius:0;}
+      .profile-header{margin-top:-46px;padding:0 12px 12px;}
+      .profile-row{grid-template-columns:1fr;align-items:flex-start;}
+      .left{gap:12px;align-items:flex-end;}
+      .profile-avatar{width:96px;height:96px;border-width:3px;}
+      .profile-name{font-size:24px;}
+      .profile-bio{font-size:13px;}
+      .pillbar{flex-wrap:nowrap;overflow-x:auto;gap:6px;padding-bottom:4px;}
+      .pill{white-space:nowrap}
+      .actions{flex-wrap:wrap;}
+      .card{border-radius:0;border-left:0;border-right:0;}
+      .post-media{aspect-ratio:4/3;}
+      .friends-grid{grid-template-columns:repeat(2,minmax(0,1fr));}
+    }
+
+    /* chat.js mobile overlay styles */
+    .chat-mobile-overlay{
+      position:fixed;
+      inset:0;
+      background:rgba(15,23,42,.12);
+      backdrop-filter:blur(4px);
+      z-index:1400;
+      display:none;
+    }
+    .chat-mobile-overlay.show{display:flex;}
+    .chat-mobile{
+      background:#fff;
+      width:100%;
+      height:100%;
+      display:flex;
+      flex-direction:column;
+    }
+    .chat-mobile-head{
+      height:52px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:8px;
+      padding:0 12px;
+      border-bottom:1px solid #e5e7eb;
+    }
+    .chat-mobile-head .title{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      min-width:0;
+    }
+    .chat-mobile-head img{
+      width:34px;
+      height:34px;
+      border-radius:999px;
+      object-fit:cover;
+    }
+    .chat-mobile-head .name{
+      font-weight:600;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+    .chat-mobile-body{
+      flex:1;
+      overflow-y:auto;
+      padding:12px;
+      display:grid;
+      gap:8px;
+      background:#f6f7f8;
+    }
+    .chat-mobile-msg{
+      max-width:78%;
+      background:#fff;
+      border:1px solid #e5e7eb;
+      border-radius:14px;
+      padding:7px 10px;
+      font-size:14px;
+    }
+    .chat-mobile-msg.me{
+      margin-left:auto;
+      background:#e0ecff;
+      border-color:#cfe0ff;
+    }
+    .chat-mobile-meta{
+      font-size:11px;
+      color:#6b7280;
+      margin-top:4px;
+    }
+    .chat-mobile-compose{
+      display:flex;
+      gap:8px;
+      padding:8px 12px 12px;
+      border-top:1px solid #e5e7eb;
+      background:#fff;
+    }
+    .chat-mobile-compose input{
+      flex:1;
+      height:40px;
+      border-radius:999px;
+      border:1px solid #e5e7eb;
+      background:#f3f4f6;
+      padding:0 14px;
+      outline:none;
+    }
+    .chat-mobile-compose button{
+      width:40px;
+      height:40px;
+      border-radius:999px;
+      border:0;
+      background:#2563eb;
+      color:#fff;
+      cursor:pointer;
+    }
+    /* hide desktop chat on small screens */
+    @media (max-width: 640px){
+      .chat-dock{display:none;}
+    }
   </style>
 </head>
 <body>
   <header class="topnav">
     <div class="container topnav-inner">
-      <a href="index.html" class="brand">
-        <div class="brand-badge" aria-hidden></div>
-        <strong>FaceKing</strong>
-      </a>
+      <a class="brand" href="index.html">
+  <div class="brand-badge" aria-hidden="true" style="display:flex;align-items:center;justify-content:center;background:#2563eb;">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+      <path d="M4 7.5 8.5 11 12 5 15.5 11 20 7.5V17a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7.5z" stroke="white" stroke-width="1.4" stroke-linejoin="round"/>
+      <path d="M8 18.5h8" stroke="white" stroke-width="1.4" stroke-linecap="round"/>
+    </svg>
+  </div>
+  <span style="font-weight:700;">FaceKing</span>
+</a>
+
       <a href="index.html" class="btn"><i class="bi bi-house-door"></i> Home</a>
     </div>
   </header>
 
   <main class="container" id="mount"></main>
 
-  <!-- Chat Dock -->
+  <!-- desktop chat dock from chat.js -->
   <div id="chatDock" class="chat-dock" aria-live="polite"></div>
 
-  <!-- Shared chat dock -->
+  <!-- shared chat dock -->
   <script src="chat.js"></script>
 
   <script>
-    /* ===== BASIC PROFILE RENDERING (same data as before) ===== */
-    const currentUser = 'roi'; // simulate logged-in user
+    /* ===== PROFILE DATA ===== */
+    const currentUser = 'roi';
     const relationships = { 'roi': { 'alex-reyes': 'friend','jamie-cruz': 'friend','sam-lee': 'friend','pat-diaz': 'friend','mika': 'friend','luis': 'friend','ava': 'friend' } };
-    const relationBetween = (viewer, target) => { if (viewer === target) return 'self'; const table = relationships[viewer] || {}; return table[target] || 'none'; };
+    const relationBetween = (viewer, target) => {
+      if (viewer === target) return 'self';
+      const table = relationships[viewer] || {};
+      return table[target] || 'none';
+    };
 
     const users = {
       'roi': { name:'Roi', avatar:'https://ui-avatars.com/api/?name=Roi&background=2563eb&color=fff', cover:'https://picsum.photos/seed/roi-cover/1200/400', bio:'Building FaceKing. Coffee-fueled and curious.', location:'Davao City, PH', friendsCount:312, about:{ work:'Freelancer', education:'University', livesIn:'Davao', joined:'2025' }, posts:[{caption:'What a view!', media:'https://picsum.photos/seed/roi1/800/450', time:'Just now', likes:24, comments:3, shares:1 }], friends:[
@@ -202,7 +342,11 @@
               <img class="profile-avatar" src="${u.avatar}" alt="${u.name} avatar">
               <div class="meta">
                 <div class="profile-name">${u.name}</div>
-                <div class="profile-bio"><i class="bi bi-geo-alt"></i> ${u.location} •<i class="bi bi-people"></i> ${(u.friendsLabel || u.friendsCount)} friends</div>
+                <div class="profile-bio">
+                  <span><i class="bi bi-geo-alt"></i> ${u.location}</span>
+                  <span>•</span>
+                  <span><i class="bi bi-people"></i> ${(u.friendsLabel || u.friendsCount)} friends</span>
+                </div>
                 <nav class="pillbar" aria-label="Profile sections">
                   <a class="pill ${tab==='timeline'?'active':''}" href="${pillHref(uKey,'timeline')}">Timeline</a>
                   <a class="pill ${tab==='about'?'active':''}"    href="${pillHref(uKey,'about')}">About</a>
@@ -360,7 +504,7 @@
         const btn  = document.getElementById('friendsBtn');
         const unf  = document.getElementById('unfriend');
         btn?.addEventListener('click', ()=> menu.classList.toggle('open'));
-        document.addEventListener('click', (e)=>{ if (!menu.contains(e.target)) menu.classList.remove('open'); });
+        document.addEventListener('click', (e)=>{ if (menu && !menu.contains(e.target)) menu.classList.remove('open'); });
         unf?.addEventListener('click', ()=>{
           if (!relationships[currentUser]) relationships[currentUser] = {};
           relationships[currentUser][uKey] = 'none';
@@ -412,15 +556,27 @@
       window.scrollTo({ top: 0, behavior: 'instant' });
     }
 
-    /* ===== Build contacts from users, init chat, then render ===== */
+    /* ===== build contacts for chat.js ===== */
     const contacts = {};
-    Object.keys(users).forEach(k => { if (k !== currentUser) { contacts[k] = { name: users[k].name, avatar: users[k].avatar, presence: 'Active now' }; }});
+    Object.keys(users).forEach(k => {
+      if (k !== currentUser) {
+        contacts[k] = { name: users[k].name, avatar: users[k].avatar, presence: 'Active now' };
+      }
+    });
     const me = { slug: currentUser, name: users[currentUser].name, avatar: users[currentUser].avatar };
-    const replies = { default: ['😎','Okay','Hmmm?','I love you <3','Sige!','😂','🙌','👍','🔥','Alright','💯','🎉','🥳','🤝','Appreciate it!'] };
+    const replies = {
+      default: ['😎','Okay','Hmmm?','I love you <3','Sige!','😂','🙌','👍','🔥','Alright','💯','🎉','🥳','🤝','Appreciate it!']
+    };
 
+    /* ===== init chat.js ===== */
     const chatAPI = ChatDock.init({ me, contacts, replies, dockSelector:'#chatDock' });
-    window.openChat = chatAPI.open;
 
+    // single entry point
+    window.openChat = function(slug){
+      chatAPI.open(slug);
+    };
+
+    /* initial render */
     renderProfile(slug);
   </script>
 </body>
